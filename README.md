@@ -18,11 +18,18 @@ Drag the Folder GCDHttpd into your Xcode projects
 
     // Router setup
     // deferredIndex will be called on visiting "/users/jake"
-    [httpd addTarget:self action:@selector(deferredIndex:) forMethod:@"GET" role:@"/users/:userid" ];
+    [httpd addTarget:self action:@selector(deferredIndex:) forMethod:@"GET" role:@"/users/:userid"];
+
+    [httpd addTarget:self action:@selector(simpleIndex:) forMethod:@"GET" role:@"/"]; 
+
     [httpd serveDirectory:@"/tmp/" forURLPrefix:@"/t/"];    // Static file serving "/t/"
     [httpd serveResource:@"screen.png" forRole:@"/screen.png"];   // Resource in the main bundle
     [httpd listenOnInterface:nil port:8000];      // Listen on port 8000 of any interfaces
 ...
+
+- (id)simpleIndex:(GCDRequest *)request {
+    return @"hello";
+}
 
 - (id)deferredIndex:(GCDRequest*)request {
     NSString * message = [NSString stringWithFormat:@"hello %@", request.pathBindings[@"userid"]];
