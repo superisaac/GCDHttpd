@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "GCDAsyncSocket.h"
+#import "GCDRequest.h"
 #import "GCDResponse.h"
 #import "GCDRouterRole.h"
+
 
 @interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate>
 

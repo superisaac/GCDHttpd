@@ -300,7 +300,7 @@ static const long kTagReadMultipartHeader = 1106;
 - (void)response:(GCDResponse *)response didReceivedData:(NSData *)data {
     if (response.chunked) {
         NSMutableData * buffer = [[NSMutableData alloc] init];
-        NSString * cntData = [NSString stringWithFormat:@"%lX\r\n", data.length];
+        NSString * cntData = [NSString stringWithFormat:@"%X\r\n", data.length];
         NSData * cnt = [cntData dataUsingEncoding:NSUTF8StringEncoding];
         [buffer appendData:cnt];
         [buffer appendData:data];

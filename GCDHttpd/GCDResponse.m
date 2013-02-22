@@ -19,12 +19,12 @@
     response.deferred = YES;
     [response.headers setObject:@"chunked" forKey:@"Transfer-Encoding"];
     return response;
-}
+} 
 
 + (GCDResponse *)responseWithContentLength:(NSInteger)len {
     GCDResponse * response = [[GCDResponse alloc] init];
     if (len > 0) {
-        [response.headers setObject:[NSString stringWithFormat:@"%ld", len] forKey:@"Content-Length"];
+        [response.headers setObject:[NSString stringWithFormat:@"%d", len] forKey:@"Content-Length"];
     }
     return response;
 }
