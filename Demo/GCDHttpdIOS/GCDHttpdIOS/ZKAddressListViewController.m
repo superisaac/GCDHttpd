@@ -8,11 +8,10 @@
 
 #import "ZKAddressListViewController.h"
 #import "GCDHttpd.h"
+#import "ZKAppDelegate.h"
 
 @interface ZKAddressListViewController () {
     NSArray * _addressList;
-    int32_t port;
-    GCDHttpd * httpd;
 }
 
 @end
@@ -25,7 +24,6 @@
     if (self) {
         // Custom initialization
         _addressList = [[NSArray alloc] init];
-        port = 9991;
     }
     return self;
 }
@@ -40,10 +38,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     _addressList = [GCDHttpd addressList];
-    httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_main_queue()];
-    [httpd addTarget:self action:@selector(indexPage:) forMethod:@"GET" role:@"/hello"];
-    [httpd serveResource:@"index.html" forRole:@"/"];
-    [httpd listenOnInterface:nil port:port];
+    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,8 +70,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     // Configure the cell...
+    ZKAppDelegate * app = (ZKAppDelegate *)[UIApplication sharedApplication].delegate;
     NSDictionary * info = [_addressList objectAtIndex:indexPath.row];
-    cell.textLabel.text = [NSString stringWithFormat:@"http://%@:%d/", [info objectForKey:@"address"], port];
+    cell.textLabel.text = [NSString stringWithFormat:@"http://%@:%d/", [info objectForKey:@"address"], app.httpdPort];
     return cell;
 }
 
@@ -132,10 +128,5 @@
      */
 }
 
-#pragma mark - web functions
-
-- (id)indexPage:(GCDRequest*)request {
-    return @"hello";
-}
 
 @end

@@ -8,7 +8,8 @@ grand central dispatch make the multi core programming easy.
 
 ## Install
 
-Drag the Folder GCDHttpd into your Xcode projects
+* Drag the Folder GCDHttpd into your Xcode projects
+* Add Security.framework and CFNetwork.framework into your Xcode projects
 
 ## Example Usage
 

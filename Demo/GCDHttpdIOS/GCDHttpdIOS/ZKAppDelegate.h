@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GCDHttpd.h"
 
 @interface ZKAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) UIViewController *viewController;
+@property (strong, nonatomic) GCDHttpd * httpd;
+@property (nonatomic) NSInteger httpdPort;
 
 @end

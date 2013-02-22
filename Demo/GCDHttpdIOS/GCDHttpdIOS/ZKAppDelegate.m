@@ -11,9 +11,11 @@
 #import "ZKAddressListViewController.h"
 
 @implementation ZKAppDelegate
+@synthesize httpd, httpdPort;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.httpdPort = 3000;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     UINavigationController * navController = [[UINavigationController alloc] initWithNibName:nil bundle:nil];
@@ -23,6 +25,12 @@
     self.viewController = navController;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    // Initialize the httpd
+    self.httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_main_queue()];
+    [self.httpd addTarget:self action:@selector(indexPage:) forMethod:@"GET" role:@"/hello"];
+    [self.httpd serveResource:@"index.html" forRole:@"/"];
+    [self.httpd listenOnInterface:nil port:self.httpdPort];
     return YES;
 }
 
@@ -51,6 +59,11 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - web functions
+- (id)indexPage:(GCDRequest*)request {
+    return @"hello";
 }
 
 @end

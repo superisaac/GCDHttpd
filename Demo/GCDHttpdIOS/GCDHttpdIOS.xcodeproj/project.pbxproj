@@ -83,7 +83,6 @@
 		06F9C6C216D723090007FDB9 = {
 			isa = PBXGroup;
 			children = (
-				06F9C74B16D726890007FDB9 /* CFNetwork.framework */,
 				06F9C6D416D723090007FDB9 /* GCDHttpdIOS */,
 				06F9C6CD16D723090007FDB9 /* Frameworks */,
 				06F9C6CC16D723090007FDB9 /* Products */,
@@ -101,6 +100,7 @@
 		06F9C6CD16D723090007FDB9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				06F9C74B16D726890007FDB9 /* CFNetwork.framework */,
 				06F9C74916D7264F0007FDB9 /* Security.framework */,
 				06F9C6CE16D723090007FDB9 /* UIKit.framework */,
 				06F9C6D016D723090007FDB9 /* Foundation.framework */,
@@ -366,6 +366,7 @@
 				06F9C6F016D723090007FDB9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
