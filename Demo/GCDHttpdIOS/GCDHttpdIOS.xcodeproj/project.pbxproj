@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06CD27FB16DB45F500C49E62 /* ZKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27F916DB45F500C49E62 /* ZKWebViewController.m */; };
+		06CD27FC16DB45F500C49E62 /* ZKWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06CD27FA16DB45F500C49E62 /* ZKWebViewController.xib */; };
+		06CD27FF16DB4E0100C49E62 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27FE16DB4E0100C49E62 /* NSData+Base64.m */; };
 		06F9C6CF16D723090007FDB9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6CE16D723090007FDB9 /* UIKit.framework */; };
 		06F9C6D116D723090007FDB9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D016D723090007FDB9 /* Foundation.framework */; };
 		06F9C6D316D723090007FDB9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D216D723090007FDB9 /* CoreGraphics.framework */; };
@@ -30,6 +33,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		06CD27F816DB45F400C49E62 /* ZKWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZKWebViewController.h; sourceTree = "<group>"; };
+		06CD27F916DB45F500C49E62 /* ZKWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZKWebViewController.m; sourceTree = "<group>"; };
+		06CD27FA16DB45F500C49E62 /* ZKWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ZKWebViewController.xib; sourceTree = "<group>"; };
+		06CD27FD16DB4E0100C49E62 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		06CD27FE16DB4E0100C49E62 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		06F9C6CB16D723090007FDB9 /* GCDHttpdIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCDHttpdIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06F9C6CE16D723090007FDB9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		06F9C6D016D723090007FDB9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -118,6 +126,9 @@
 				06F9C6F216D724A30007FDB9 /* ZKAddressListViewController.m */,
 				06F9C6DD16D723090007FDB9 /* ZKAppDelegate.h */,
 				06F9C6DE16D723090007FDB9 /* ZKAppDelegate.m */,
+				06CD27F816DB45F400C49E62 /* ZKWebViewController.h */,
+				06CD27F916DB45F500C49E62 /* ZKWebViewController.m */,
+				06CD27FA16DB45F500C49E62 /* ZKWebViewController.xib */,
 				06F9C6D516D723090007FDB9 /* Supporting Files */,
 			);
 			path = GCDHttpdIOS;
@@ -153,6 +164,8 @@
 				06F9C73F16D724F00007FDB9 /* NSString+QueryString.m */,
 				06F9C74016D724F00007FDB9 /* NSURL+IntactPath.h */,
 				06F9C74116D724F00007FDB9 /* NSURL+IntactPath.m */,
+				06CD27FD16DB4E0100C49E62 /* NSData+Base64.h */,
+				06CD27FE16DB4E0100C49E62 /* NSData+Base64.m */,
 			);
 			name = GCDHttpd;
 			path = ../../../GCDHttpd;
@@ -232,6 +245,7 @@
 				06F9C6E316D723090007FDB9 /* Default@2x.png in Resources */,
 				06F9C6E516D723090007FDB9 /* Default-568h@2x.png in Resources */,
 				06F9C74F16D728A90007FDB9 /* index.html in Resources */,
+				06CD27FC16DB45F500C49E62 /* ZKWebViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +266,8 @@
 				06F9C74616D724F00007FDB9 /* GCDRouterRole.m in Sources */,
 				06F9C74716D724F00007FDB9 /* NSString+QueryString.m in Sources */,
 				06F9C74816D724F00007FDB9 /* NSURL+IntactPath.m in Sources */,
+				06CD27FB16DB45F500C49E62 /* ZKWebViewController.m in Sources */,
+				06CD27FF16DB4E0100C49E62 /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

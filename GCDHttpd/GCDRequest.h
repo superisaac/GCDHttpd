@@ -10,7 +10,7 @@
 #import "GCDAsyncSocket.h"
 #import "GCDRouterRole.h"
 
-@interface GCDMultipartChunk : NSObject
+@interface GCDFormPart : NSObject
 
 @property (nonatomic, retain) NSMutableDictionary * headers;
 @property (nonatomic, retain) NSData * data;
@@ -37,8 +37,7 @@
 @property (nonatomic, retain) NSMutableDictionary * FILES;
 
 @property (nonatomic, retain) NSData * rawData;
-//@property (nonatomic, retain) NSMutableArray * multipartChunks;
-@property (nonatomic, retain) GCDMultipartChunk * lastChunk;
+@property (nonatomic, retain) GCDFormPart * lastChunk;
 @property (nonatomic, retain) NSDictionary * pathBindings;
 @property (nonatomic, retain) GCDRouterRole * selectedRouterRole;
 

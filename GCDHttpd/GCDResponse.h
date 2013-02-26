@@ -28,8 +28,9 @@
 + (GCDResponse *)responseChunked;
 + (GCDResponse *)responseWithContentLength:(NSInteger)len;
 + (GCDResponse *)responseWithStatus:(int32_t)status message:(NSString *)message;
++ (GCDResponse*)responseWithStatus:(int32_t)status;
++ (NSString *) statusBrief:(int32_t)status;
 
-- (NSString *) statusBrief;
 - (void)sendBuffer;
 - (void)sendData:(NSData *)data;
 - (void)sendString:(NSString *)str;

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GCDHttpd.h"
 
-@interface ZKAppDelegate : UIResponder <UIApplicationDelegate>
+@interface ZKAppDelegate : UIResponder <UIApplicationDelegate, GCDHttpdDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

@@ -36,6 +36,11 @@
     return response;
 }
 
++ (GCDResponse*)responseWithStatus:(int32_t)status {
+    NSString * message = [self statusBrief:status];
+    return [self responseWithStatus:status message:message];
+}
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -52,7 +57,7 @@
     return self;
 }
 
-- (NSString *) statusBrief {
++ (NSString *) statusBrief:(int32_t)status {
     static NSDictionary * _statusBrief;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -77,7 +82,7 @@
                         @"Internal Server Error", @"500",
                         nil];
     });
-    return [_statusBrief objectForKey:[NSString stringWithFormat:@"%d", self.status]];
+    return [_statusBrief objectForKey:[NSString stringWithFormat:@"%d", status]];
 }
 
 - (void)sendData:(NSData *)data {

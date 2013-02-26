@@ -10,7 +10,7 @@
 #import "NSString+QueryString.h"
 
 
-@implementation GCDMultipartChunk
+@implementation GCDFormPart
 @synthesize headers, data, contentType;
 
 - (id) init {

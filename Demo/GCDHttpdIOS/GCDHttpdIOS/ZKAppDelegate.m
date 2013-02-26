@@ -28,9 +28,13 @@
     
     // Initialize the httpd
     self.httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_main_queue()];
-    [self.httpd addTarget:self action:@selector(indexPage:) forMethod:@"GET" role:@"/hello"];
+    self.httpd.delegate = self;
+    self.httpd.port = self.httpdPort;
+    [self.httpd addTarget:self action:@selector(helloPage:) forMethod:@"GET" role:@"/hello"];
+    [self.httpd addTarget:self action:@selector(deferredPage:) forMethod:@"GET" role:@"/deferred"];
+    [self.httpd addTarget:self action:@selector(basicAuthPage:) forMethod:@"GET" role:@"/auth"];
     [self.httpd serveResource:@"index.html" forRole:@"/"];
-    [self.httpd listenOnInterface:nil port:self.httpdPort];
+    [self.httpd start];
     return YES;
 }
 
@@ -62,8 +66,40 @@
 }
 
 #pragma mark - web functions
-- (id)indexPage:(GCDRequest*)request {
-    return @"hello";
+- (id)helloPage:(GCDRequest*)request {
+    return @"hello\n";
+}
+
+- (id)basicAuthPage:(GCDRequest*)request {
+    NSString * authUser = request.META[@"HTTP_AUTH_USER"];
+    NSString * password = request.META[@"HTTP_AUTH_PW"];
+    if (authUser == nil || password == nil || ![authUser isEqualToString:@"admin"] || ![password isEqualToString:@"123456"]) {
+        GCDResponse * response = [GCDResponse responseWithStatus:401 message:@"Unauthorized"];
+        response.headers[@"WWW-Authenticate"] = @"Basic realm=\"MyIphone\"";
+        return response;
+    } else {
+        return @"You have successfully authorized to this device!\n";
+    }
+}
+
+
+- (id)deferredPage:(GCDRequest*)request {
+    GCDResponse * response = [GCDResponse responseChunked];
+    
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [response sendString:@"Deferred greeting after 2 seconds"];
+        [response finish];
+    });
+    return response;
+}
+
+#pragma mark - GCDHttpdDelegate
+- (id)willStartRequest:(GCDRequest *)request {
+    // Do somthing to handle request
+    NSLog(@"request %@", request.requestURL);
+    return nil;
 }
 
 @end

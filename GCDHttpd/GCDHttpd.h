@@ -12,15 +12,27 @@
 #import "GCDResponse.h"
 #import "GCDRouterRole.h"
 
+@protocol GCDHttpdDelegate <NSObject>
+@optional
+- (id) willStartRequest:(GCDRequest *)request;
+- (void) didFinishedRequest:(GCDRequest *)request withResponse:(GCDResponse *)response;
+@end
 
 @interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate>
+
+@property (nonatomic) int16_t port;
+@property (nonatomic, retain) NSString * interface;
 
 @property (nonatomic) NSInteger maxBodyLength;
 @property (nonatomic) int32_t maxAgeOfCacheControl;
 
-+ (NSArray *)addressList;
+@property (nonatomic, weak) id<GCDHttpdDelegate> delegate;
+@property (nonatomic) NSInteger httpdState;
+
++ (NSArray *)interfaceList;
 - (id) initWithDispatchQueue:(dispatch_queue_t)queue;
-- (void)listenOnInterface:(NSString *)interface port:(NSInteger)port;
+- (void)start;
+- (void)stop;
 
 - (GCDRouterRole *)addTarget:(id)target action:(SEL)action forMethod:(NSString *)method role:(NSString *)role;
 - (void)serveDirectory:(NSString *)directory  forURLPrefix:(NSString *)prefix;

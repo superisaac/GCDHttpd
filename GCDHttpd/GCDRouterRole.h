@@ -12,7 +12,7 @@
 
 @property (nonatomic, retain) NSString * method;
 @property (nonatomic, retain) NSString * pathPattern;
-@property (nonatomic, retain) id target;
+@property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic, retain) id userData;
 

@@ -11,6 +11,7 @@
 #import "GCDHttpd.h"
 #import "GCDRequest.h"
 
+#import "NSData+Base64.h"
 #import "NSString+QueryString.h"
 #import "NSURL+IntactPath.h"
 
@@ -24,6 +25,10 @@ static const long kTagReadMultipartBoundary = 1104;
 static const long kTagReadMultipartEndTest = 1105;
 static const long kTagReadMultipartHeader = 1106;
 
+static const NSInteger kHttpdStateInitialized = 0;
+static const NSInteger kHttpdStateStarted = 1;
+static const NSInteger kHttpdStateStopped = 2;
+static const NSInteger kHttpdStateInError = -1;
 
 @implementation GCDHttpd {
     GCDAsyncSocket * _listenSocket;
@@ -31,11 +36,13 @@ static const long kTagReadMultipartHeader = 1106;
     dispatch_queue_t _dispatchQueue;
 }
 
-+ (NSArray *)addressList {
+@synthesize delegate, maxAgeOfCacheControl, maxBodyLength;
+@synthesize port, interface, httpdState;
+
++ (NSArray *)interfaceList {
     struct ifaddrs *interfaces = NULL;
     struct ifaddrs *temp_addr = NULL;
     int success = 0;
-    // retrieve the current interfaces - returns 0 on success
     success = getifaddrs(&interfaces);
     NSMutableArray * arr = [[NSMutableArray alloc] init];
     if (success == 0) {
@@ -57,7 +64,7 @@ static const long kTagReadMultipartHeader = 1106;
     }
     // Free memory
     freeifaddrs(interfaces);
-    return arr;    
+    return arr;
 }
 
 - (id) initWithDispatchQueue:(dispatch_queue_t)queue {
@@ -67,16 +74,31 @@ static const long kTagReadMultipartHeader = 1106;
         _roles = [[NSMutableArray alloc] init];
         self.maxBodyLength = 4 * 1024 * 1024; // 4M bytes
         self.maxAgeOfCacheControl = 2; // 2 seconds
+        self.port = 3000;
+        self.interface = nil;
+
+        self.httpdState = kHttpdStateInitialized;
     }
     return self;
 }
 
-- (void)listenOnInterface:(NSString *)interface port:(NSInteger)port {
+- (void)start {
     _listenSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_dispatchQueue];
     NSError * error = nil;
-    if (![_listenSocket acceptOnInterface:interface port:port error:&error]) {
+    if (![_listenSocket acceptOnInterface:self.interface port:self.port error:&error]) {
         NSLog(@"Error on listen %@", [error description]);
+        self.httpdState = kHttpdStateInError;
+    } else {
+        self.httpdState = kHttpdStateStarted;
     }
+}
+
+- (void)stop {
+    if (self.httpdState != kHttpdStateStarted) {
+        NSLog(@"Weird http state %d on httpdState", self.httpdState);
+    }
+    [_listenSocket disconnect];
+    self.httpdState = kHttpdStateStopped;
 }
 
 - (void)socket:(GCDAsyncSocket*)sock readLineWithTag:(long)tag {
@@ -93,6 +115,31 @@ static const long kTagReadMultipartHeader = 1106;
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
     if (tag == kTagWriteAndClose) {
         [sock disconnect];
+    }
+}
+
+- (void)processMetaDataOfRequest:(GCDRequest*)request {
+    // Handle Meta variables
+    [request setMetaVariable:request.requestURL.query forKey:@"QUERY_STRING"];
+    [request setMetaVariable:request.method forKey:@"METHOD"];
+    
+    // Parse Authorization
+    NSString * auth = request.META[@"HTTP_AUTHORIZATION"];
+    if (auth) {
+        NSError * error;
+        NSRegularExpression * regexp = [NSRegularExpression regularExpressionWithPattern:@"Basic ([a-zA-Z0-9\\+\\=/]+)" options:NSRegularExpressionCaseInsensitive error:&error];
+        NSTextCheckingResult * match = [regexp firstMatchInString:auth options:0 range:NSMakeRange(0, auth.length)];
+        if (match) {
+            NSRange range = [match rangeAtIndex:1];
+            NSData * base64EncodedAuth = [[auth substringWithRange:range] dataUsingEncoding:NSASCIIStringEncoding];
+            NSData * userAndPass = [base64EncodedAuth base64Decode];
+            NSString * userAndPassStr = [[NSString alloc] initWithData:userAndPass encoding:NSUTF8StringEncoding];
+            NSArray * arr = [userAndPassStr componentsSeparatedByString:@":"];
+            if (arr.count == 2) {
+                [request setMetaVariable:[arr objectAtIndex:0] forKey:@"AUTH_USER"];
+                [request setMetaVariable:[arr objectAtIndex:1] forKey:@"AUTH_PW"];
+            }
+        }
     }
 }
 
@@ -127,8 +174,9 @@ static const long kTagReadMultipartHeader = 1106;
             [self socket:sock readLineWithTag:kTagReadHeaderLine];
         } else {
             // Empty lines
-            [request setMetaVariable:request.requestURL.query forKey:@"QUERY_STRING"];
-            
+            // Handle Meta variables
+            [self processMetaDataOfRequest:request];
+
             NSInteger contentLength = [request.META[@"CONTENT_LENGTH"] intValue];
             if (contentLength > 0 && contentLength > self.maxBodyLength) {
                 [self socket:sock httpErrorStatus:413 message:@"Entity Too Large\n"];
@@ -164,7 +212,7 @@ static const long kTagReadMultipartHeader = 1106;
         }
         [self socket:sock endParsingRequest:request];
     } else if (tag == kTagReadMultipartBoundary) {
-        GCDMultipartChunk * chunk = request.lastChunk;
+        GCDFormPart * chunk = request.lastChunk;
         if (chunk) {
             NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
             chunk.data = [data subdataWithRange:NSMakeRange(0, data.length - boundary.length - 2)];
@@ -180,7 +228,7 @@ static const long kTagReadMultipartHeader = 1106;
         [sock readDataToLength:2 withTimeout:-1 tag:kTagReadMultipartEndTest];
     } else if (tag == kTagReadMultipartEndTest) {
         if([data isEqualToData:[GCDAsyncSocket CRLFData]]) {
-            request.lastChunk = [[GCDMultipartChunk alloc] init];
+            request.lastChunk = [[GCDFormPart alloc] init];
             [self socket:sock readLineWithTag:kTagReadMultipartHeader];
         } else {
             NSAssert([data isEqualToData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]], @"Unexpected chars beyond CRLF and --");
@@ -188,7 +236,7 @@ static const long kTagReadMultipartHeader = 1106;
         }
     } else if (tag == kTagReadMultipartHeader) {
         if (data.length > 2) {
-            GCDMultipartChunk * chunk = request.lastChunk;
+            GCDFormPart * chunk = request.lastChunk;
             NSAssert(chunk != nil, @"Chunk is null");
             
             NSString * line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -223,12 +271,23 @@ static const long kTagReadMultipartHeader = 1106;
         if (bindings != nil) {
             request.pathBindings = bindings;
             request.selectedRouterRole = roleEntry;
+            request.lastChunk = nil;
+            NSLog(@"%@ %@", request.method, request.pathString);
+            if (self.delegate && [self.delegate respondsToSelector:@selector(willStartRequest:)]) {
+                id response = [self.delegate willStartRequest:request];
+                if (response != nil) {
+                    [self socket:sock respond:response];
+                    return;
+                }
+            }
+            if (roleEntry.target) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            id response = [roleEntry.target performSelector:roleEntry.action withObject:request];
+                id response = [roleEntry.target performSelector:roleEntry.action withObject:request];
 #pragma clang diagnostic pop
-            [self socket:sock generateResponse:response];
-            return;
+                [self socket:sock respond:response];
+                return;
+            }
         }
     }
     [self socket:sock httpErrorStatus:404 message:@"Object Not Found\n"];
@@ -244,7 +303,7 @@ static const long kTagReadMultipartHeader = 1106;
 }
 
 
-- (void)socket:(GCDAsyncSocket *)sock generateResponse:(id)response {
+- (void)socket:(GCDAsyncSocket *)sock respond:(id)response {
     GCDResponse * resp;
     NSData * payload = nil;
     if ([response isKindOfClass:[NSString class]]) {
@@ -260,8 +319,13 @@ static const long kTagReadMultipartHeader = 1106;
     resp.delegate = self;
     resp.socket = sock;
     
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didFinishedRequest:withResponse:)]) {
+        GCDRequest * request = (GCDRequest *)(sock.userData);
+        [self.delegate didFinishedRequest:request withResponse:response];
+    }
+    
     // Output headers
-    NSString * statusLine = [NSString stringWithFormat:@"HTTP/1.1 %d %@\r\n", resp.status, resp.statusBrief];
+    NSString * statusLine = [NSString stringWithFormat:@"HTTP/1.1 %d %@\r\n", resp.status, [GCDResponse statusBrief:resp.status]];
     [self socket:sock writeString:statusLine];
 
     for(NSString * key in resp.headers) {
@@ -331,6 +395,7 @@ static const long kTagReadMultipartHeader = 1106;
                    @"text/plain", @"txt",
                    @"text/javascript", @"js",
                    @"text/css", @"css",
+                   @"image/icon", @"ico",
                    @"image/jpeg", @"jpg",
                    @"image/jpeg", @"jpeg",
                    @"image/gif", @"gif",
@@ -355,7 +420,6 @@ static const long kTagReadMultipartHeader = 1106;
     GCDRouterRole * role = [self addTarget:self action:@selector(serveStaticFile:) forMethod:@"GET" role:staticRole];
     role.userData = directory;
 }
-
 
 - (id) serveStaticFile:(GCDRequest *)request {
     NSString * relativePath = request.pathBindings[@"path"];
@@ -407,7 +471,7 @@ static const long kTagReadMultipartHeader = 1106;
 // error response
 - (void)socket:(GCDAsyncSocket *)sock httpErrorStatus:(int32_t)status message:(NSString *)message {
     GCDResponse * response = [GCDResponse responseWithStatus:status message:message];
-    [self socket:sock generateResponse:response];
+    [self socket:sock respond:response];
 }
 
 @end

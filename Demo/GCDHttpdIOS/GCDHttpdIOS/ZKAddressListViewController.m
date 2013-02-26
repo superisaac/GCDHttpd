@@ -7,6 +7,7 @@
 //
 
 #import "ZKAddressListViewController.h"
+#import "ZKWebViewController.h"
 #import "GCDHttpd.h"
 #import "ZKAppDelegate.h"
 
@@ -37,7 +38,7 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    _addressList = [GCDHttpd addressList];
+    _addressList = [GCDHttpd interfaceList];
     [self.tableView reloadData];
 }
 
@@ -126,6 +127,12 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    ZKWebViewController * viewController = [[ZKWebViewController alloc] initWithNibName:@"ZKWebViewController" bundle:nil];
+    viewController.title = cell.textLabel.text;
+    viewController.launchURL = [NSURL URLWithString:cell.textLabel.text];
+
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 
