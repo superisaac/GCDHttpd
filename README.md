@@ -16,16 +16,14 @@ grand central dispatch make the multi core programming easy.
 ```
     // Initialize the httpd
     httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_current_queue()];
-
+    httpd.port = 8000;       // Listen on 0.0.0.0:8000
     // Router setup
-    // deferredIndex will be called on visiting "/users/jake"
     [httpd addTarget:self action:@selector(deferredIndex:) forMethod:@"GET" role:@"/users/:userid"];
-
-    [httpd addTarget:self action:@selector(simpleIndex:) forMethod:@"GET" role:@"/"]; 
-
+    [httpd addTarget:self action:@selector(simpleIndex:) forMethod:@"GET" role:@"/"];
     [httpd serveDirectory:@"/tmp/" forURLPrefix:@"/t/"];    // Static file serving "/t/"
     [httpd serveResource:@"screen.png" forRole:@"/screen.png"];   // Resource in the main bundle
-    [httpd listenOnInterface:nil port:8000];      // Listen on port 8000 of any interfaces
+
+    [httpd start];
 ...
 
 - (id)simpleIndex:(GCDRequest *)request {
@@ -41,7 +39,7 @@ grand central dispatch make the multi core programming easy.
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_current_queue(), ^(void){
-        [response sendString:message];
+        [response sendString:message];  // Send message 2 seconds later
         [response finish];    // Finish the response
     });
     return response;
