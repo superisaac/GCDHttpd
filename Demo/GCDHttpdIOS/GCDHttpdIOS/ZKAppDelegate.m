@@ -33,6 +33,7 @@
     [self.httpd addTarget:self action:@selector(helloPage:) forMethod:@"GET" role:@"/hello"];
     [self.httpd addTarget:self action:@selector(deferredPage:) forMethod:@"GET" role:@"/deferred"];
     [self.httpd addTarget:self action:@selector(basicAuthPage:) forMethod:@"GET" role:@"/auth"];
+    [self.httpd addTarget:self action:@selector(uploadPage:) forMethod:@"POST" role:@"/upload"];
     [self.httpd serveResource:@"index.html" forRole:@"/"];
     [self.httpd start];
     return YES;
@@ -68,6 +69,17 @@
 #pragma mark - web functions
 - (id)helloPage:(GCDRequest*)request {
     return @"hello\n";
+}
+
+- (id)uploadPage:(GCDRequest *)request {
+    GCDFormPart * part = request.FILES[@"ff"];
+    if (part) {
+        NSFileHandle * fileHandle = [NSFileHandle fileHandleForReadingAtPath:part.tmpFilename];
+        NSData * fileData = [fileHandle readDataToEndOfFile];
+        [fileHandle closeFile];
+        NSLog(@"file content (%@)", [[NSString alloc ] initWithData:fileData encoding:NSUTF8StringEncoding]);
+    }
+    return @"ok\n";
 }
 
 - (id)basicAuthPage:(GCDRequest*)request {

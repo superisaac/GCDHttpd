@@ -9,57 +9,13 @@
 #import "GCDRequest.h"
 #import "NSString+QueryString.h"
 
-
-@implementation GCDFormPart
-@synthesize headers, data, contentType;
-
-- (id) init {
-    self = [super init];
-    if (self) {
-        self.headers = [[NSMutableDictionary alloc] init];
-        self.data = [[NSData alloc] init];
-    }
-    return self;
-}
-
-- (void)setContentDisposition:(NSString *)disposition {
-    _contentDisposition = disposition;
-    
-    NSError * error;
-    NSRegularExpression * regexp = [NSRegularExpression regularExpressionWithPattern:@"(\\w+)=(\"[^\"]*\"|\\S+)" options:0 error:&error];
- 
-    NSAssert(error == nil, @"regexp compilation ");
-    for (NSTextCheckingResult * match in [regexp matchesInString:disposition options:0 range:NSMakeRange(0, disposition.length)]) {
-        NSRange nameRange = [match rangeAtIndex:1];
-        NSString * attrName = [disposition substringWithRange:nameRange];
-        attrName = [attrName lowercaseString];
-        NSRange valueRange = [match rangeAtIndex:2];
-        NSString * attrValue = [disposition substringWithRange:valueRange];
-        if ([[attrValue substringToIndex:1] isEqualToString:@"\""]) {
-            attrValue = [attrValue substringWithRange:NSMakeRange(1, attrValue.length - 2)];
-        }
-        if ([attrName isEqualToString:@"filename"]) {
-            _fileName = attrValue;
-        } else if ([attrName isEqualToString:@"name"]) {
-            _name = attrValue;
-        }
-    }
-}
-
-- (BOOL)isFile {
-    return self.fileName != nil;
-}
-
-@end
-
-
 @implementation GCDRequest {
     NSString * _multipartBoundary;
     NSDictionary * _params;
 }
 
 @synthesize META, FILES, POST, pathBindings, pathString;
-@synthesize method, selectedRouterRole, lastChunk;
+@synthesize method, selectedRouterRole, multipart;
 
 - (id)init {
     self = [super init];

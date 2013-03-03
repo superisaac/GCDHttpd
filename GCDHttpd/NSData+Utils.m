@@ -6,18 +6,18 @@
 //  Copyright (c) 2013年 zengke. All rights reserved.
 //
 
-#import "NSData+Base64.h"
+#import "NSData+Utils.h"
 
 static unsigned char base64EncodeLookup[65] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-@implementation NSData (Base64)
+@implementation NSData (Utils)
 
 - (NSData *)base64Encode {
     NSInteger outputCapacity = (NSInteger)ceil(self.length * 4.0 / 3);
     NSMutableData * output = [NSMutableData dataWithCapacity:outputCapacity];
     [output setLength:outputCapacity];
-    unsigned char * inputBuffer = (unsigned char *)[self bytes];
-    unsigned char * outputBuffer = (unsigned char *)[output mutableBytes];
+    Byte * inputBuffer = (Byte *)[self bytes];
+    Byte * outputBuffer = (Byte *)[output mutableBytes];
     NSInteger i = 0;
     NSInteger j = 0;
     NSInteger shiftLength = (NSInteger)floor(self.length/3) * 3;
@@ -97,4 +97,28 @@ static unsigned char _base64DecodeLookup(unsigned char b) {
     [output setLength:j];
     return output;
 }
+
+- (NSInteger)firstPostionOfData:(NSData*)subData {
+    return [self firstPostionOfData:subData offset:0];
+}
+
+- (NSInteger)firstPostionOfData:(NSData *)subData offset:(NSInteger)offset {
+    NSAssert(subData.length > 0, @"Empty sub");
+    NSInteger subLength = subData.length;
+    NSInteger availLength = self.length - subLength;
+    if (availLength < offset) {
+        return -1;
+    }
+    
+    Byte * selfBytes = (Byte*)[self bytes];
+    Byte * subBytes = (Byte *)[subData bytes];
+    for (NSInteger i=offset; i< availLength; i++) {
+        if(0 == memcmp(selfBytes + i, subBytes, subLength)) {
+            // Found
+            return i;
+        }
+    }
+    return -1;
+}
+
 @end

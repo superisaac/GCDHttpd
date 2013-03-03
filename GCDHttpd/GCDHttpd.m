@@ -11,19 +11,23 @@
 #import "GCDHttpd.h"
 #import "GCDRequest.h"
 
-#import "NSData+Base64.h"
+#import "NSData+Utils.h"
 #import "NSString+QueryString.h"
 #import "NSURL+IntactPath.h"
+#import "GCDMultipart.h"
 
 static const long kTagWriteAndClose = 1000;
 
 static const long kTagReadStatusLine = 1101;
 static const long kTagReadHeaderLine = 1102;
 
+
 static const long kTagReadPostContentLength = 1103;
 static const long kTagReadMultipartBoundary = 1104;
 static const long kTagReadMultipartEndTest = 1105;
 static const long kTagReadMultipartHeader = 1106;
+
+static const long kTagReadMultipartBody = 1110;
 
 static const NSInteger kHttpdStateInitialized = 0;
 static const NSInteger kHttpdStateStarted = 1;
@@ -156,7 +160,7 @@ static const NSInteger kHttpdStateInError = -1;
         }
     }
     if (tag == kTagReadStatusLine) {
-        NSString * line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSString * line = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSArray * parts = [line componentsSeparatedByString:@" "];
         assert(parts.count == 3);
@@ -165,7 +169,7 @@ static const NSInteger kHttpdStateInError = -1;
         [self socket:sock readLineWithTag:kTagReadHeaderLine];
     } else if (tag == kTagReadHeaderLine) {
         if (data.length > 2) {
-            NSString * line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSString * line = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             NSRange range = [line rangeOfString:@":"];
             NSString * key = [line substringToIndex:range.location];
@@ -188,11 +192,12 @@ static const NSInteger kHttpdStateInError = -1;
             } else if([request.method isEqualToString:@"POST"]) {
                 if ([request isMultipart]){
                     NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
+                    request.multipart = [[GCDMultipart alloc] initWithBundary:boundary];
+                    
                     NSAssert(boundary != nil, @"boundary is nil");
-                    [sock readDataToData:[boundary dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 maxLength:(self.maxBodyLength - request.readedBodyLength) tag:kTagReadMultipartBoundary];
+                    [sock readDataWithTimeout:-1 tag:kTagReadMultipartBody];
                     return;
                 }
-                
                 if (contentLength > 0) {
                     [sock readDataToLength:contentLength withTimeout:-1 tag:kTagReadPostContentLength];
                 }
@@ -202,7 +207,7 @@ static const NSInteger kHttpdStateInError = -1;
         request.rawData = data;
         NSString * contentType = request.META[@"CONTENT_TYPE"];
         if ([contentType isEqualToString:@"application/x-www-form-urlencoded"]) {
-             NSString * postBody = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+             NSString * postBody = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             [request.POST setValuesForKeysWithDictionary:[postBody explodeToQueryDictionary]];
         } else if ([request isMultipart]){
             NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
@@ -211,67 +216,26 @@ static const NSInteger kHttpdStateInError = -1;
             return;
         }
         [self socket:sock endParsingRequest:request];
-    } else if (tag == kTagReadMultipartBoundary) {
-        GCDFormPart * chunk = request.lastChunk;
-        if (chunk) {
-            NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
-            chunk.data = [data subdataWithRange:NSMakeRange(0, data.length - boundary.length - 2)];
-            if (chunk.isFile) {
-                // A file is uploaded, store it into request.FILES
-                [request.FILES setObject:chunk forKey:chunk.name];
-            } else {
-                // An variable
-                NSString * strValue = [[NSString alloc] initWithData:chunk.data encoding:NSUTF8StringEncoding];
-                [request.POST setObject:strValue forKey:chunk.name];
-            }
-        }
-        [sock readDataToLength:2 withTimeout:-1 tag:kTagReadMultipartEndTest];
-    } else if (tag == kTagReadMultipartEndTest) {
-        if([data isEqualToData:[GCDAsyncSocket CRLFData]]) {
-            request.lastChunk = [[GCDFormPart alloc] init];
-            [self socket:sock readLineWithTag:kTagReadMultipartHeader];
-        } else {
-            NSAssert([data isEqualToData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]], @"Unexpected chars beyond CRLF and --");
+    } else if (tag == kTagReadMultipartBody) {
+        [request.multipart feed:data];
+        if (request.multipart.finished) {
+            NSLog(@"ok finished %@", request.multipart.POST);
+            request.FILES = request.multipart.FILES;
+            request.POST = request.multipart.POST;
             [self socket:sock endParsingRequest:request];
-        }
-    } else if (tag == kTagReadMultipartHeader) {
-        if (data.length > 2) {
-            GCDFormPart * chunk = request.lastChunk;
-            NSAssert(chunk != nil, @"Chunk is null");
-            
-            NSString * line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSRange range = [line rangeOfString:@":"];
-            NSString * key = [line substringToIndex:range.location];
-            key = [key lowercaseString];
-            NSString * value = [[line substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            if ([key isEqualToString:@"content-disposition"]) {
-                chunk.contentDisposition = value;
-            } else if ([key isEqualToString:@"content-type"]) {
-                chunk.contentType = value;
-            } else {
-                [chunk.headers setObject:value forKey:key];
-            }
-            [self socket:sock readLineWithTag:kTagReadMultipartHeader];
         } else {
-            // Empty line means multipart chunk headers are parsed
-            // 
-            NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
-            NSAssert(boundary != nil, @"boundary is nil");
-            [sock readDataToData:[boundary dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 maxLength:(self.maxBodyLength - request.readedBodyLength) tag:kTagReadMultipartBoundary];
+            [sock readDataWithTimeout:-1 tag:kTagReadMultipartBody];
         }
     }
 }
 
 - (void)socket:(GCDAsyncSocket *)sock endParsingRequest:(GCDRequest *)request {
-    request.lastChunk = nil;
     NSString * path = request.requestURL.intactPath;
     for (GCDRouterRole * roleEntry in _roles) {
         NSDictionary * bindings = [roleEntry matchMethod:request.method path:path];
         if (bindings != nil) {
             request.pathBindings = bindings;
             request.selectedRouterRole = roleEntry;
-            request.lastChunk = nil;
             NSLog(@"%@ %@", request.method, request.pathString);
             if (self.delegate && [self.delegate respondsToSelector:@selector(willStartRequest:)]) {
                 id response = [self.delegate willStartRequest:request];
@@ -358,6 +322,15 @@ static const NSInteger kHttpdStateInError = -1;
         [response.socket writeData:zero withTimeout:-1 tag:kTagWriteAndClose];
     } else {
         [response.socket writeData:[GCDAsyncSocket ZeroData] withTimeout:-1 tag:kTagWriteAndClose];
+    }
+    
+    GCDRequest * request = (GCDRequest *)response.socket.userData;
+    if(request) {
+        for (NSString * name in request.FILES) {
+            GCDFormPart * part = request.FILES[name];
+            [part close];
+        }
+        request.FILES = nil;
     }
 }
 

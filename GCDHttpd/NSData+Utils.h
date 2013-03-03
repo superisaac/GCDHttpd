@@ -8,8 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSData (Base64)
+
+@interface NSData (Utils)
 
 - (NSData *)base64Decode;
 - (NSData *)base64Encode;
+
+- (NSInteger)firstPostionOfData:(NSData*)subData;
+- (NSInteger)firstPostionOfData:(NSData *)subData offset:(NSInteger)offset;
+
 @end
