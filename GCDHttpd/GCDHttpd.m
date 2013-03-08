@@ -61,7 +61,6 @@ static const NSInteger kHttpdStateInError = -1;
                                            address, @"address",
                                            nil];
                 [arr addObject:addrInfo];
-                
             }
             temp_addr = temp_addr->ifa_next;
         }
@@ -69,6 +68,10 @@ static const NSInteger kHttpdStateInError = -1;
     // Free memory
     freeifaddrs(interfaces);
     return arr;
+}
+
+- (dispatch_queue_t)dispatchQueue {
+    return _dispatchQueue;
 }
 
 - (id) initWithDispatchQueue:(dispatch_queue_t)queue {
@@ -112,6 +115,7 @@ static const NSInteger kHttpdStateInError = -1;
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket {
     GCDRequest * request = [[GCDRequest alloc] init];
     request.socket = newSocket;
+    request.httpd = self;
     newSocket.userData = request;
     [self socket:newSocket readLineWithTag:kTagReadStatusLine];
 }
@@ -269,45 +273,25 @@ static const NSInteger kHttpdStateInError = -1;
 
 - (void)socket:(GCDAsyncSocket *)sock respond:(id)response {
     GCDResponse * resp;
+    GCDRequest * request = (GCDRequest*)sock.userData;
     NSData * payload = nil;
     if ([response isKindOfClass:[NSString class]]) {
         payload = [(NSString *)response dataUsingEncoding:NSUTF8StringEncoding];
-        resp = [GCDResponse responseWithContentLength:payload.length];
+        resp = [request responseWithContentLength:payload.length];
     } else if ([response isKindOfClass:[NSData class]]){
         payload = (NSData*)response;
-        resp = [GCDResponse responseWithContentLength:payload.length];
+        resp = [request responseWithContentLength:payload.length];
     } else {
         assert([response isKindOfClass:[GCDResponse class]]);
         resp = (GCDResponse *)response;
     }
-    resp.delegate = self;
-    resp.socket = sock;
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(didFinishedRequest:withResponse:)]) {
-        GCDRequest * request = (GCDRequest *)(sock.userData);
-        [self.delegate didFinishedRequest:request withResponse:response];
-    }
-    
-    // Output headers
-    NSString * statusLine = [NSString stringWithFormat:@"HTTP/1.1 %d %@\r\n", resp.status, [GCDResponse statusBrief:resp.status]];
-    [self socket:sock writeString:statusLine];
 
-    for(NSString * key in resp.headers) {
-        NSString * value = [resp.headers objectForKey:key];
-        NSString * headerLine = [NSString stringWithFormat:@"%@: %@\r\n", key, value];
-        [self socket:sock writeString:headerLine];
-    }
-    [self socket:sock writeString:@"\r\n"];
-    
     // If there is payload, just send them
     if (payload) {
         [resp sendData:payload];
         [resp finish];
-    } else if (resp.buffer.length > 0){
-        [resp sendBuffer];
-        if (!resp.deferred) {
-            [resp finish];
-        }
+    } else if (!resp.deferred) {
+        [resp finish];
     }
 }
 
@@ -316,6 +300,24 @@ static const NSInteger kHttpdStateInError = -1;
 }
 
 # pragma mark - GHResponseDelegate
+- (void)responseBeginSendData:(GCDResponse *)response {
+    GCDRequest * request = (GCDRequest *)(response.socket.userData);
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didFinishedRequest:withResponse:)]) {
+        [self.delegate didFinishedRequest:request withResponse:response];
+    }
+    
+    // Output headers
+    NSString * statusLine = [NSString stringWithFormat:@"HTTP/1.1 %d %@\r\n", response.status, [GCDResponse statusBrief:response.status]];
+    [self socket:response.socket writeString:statusLine];
+
+    for(NSString * key in response.headers) {
+        NSString * value = [response.headers objectForKey:key];
+        NSString * headerLine = [NSString stringWithFormat:@"%@: %@\r\n", key, value];
+        [self socket:response.socket writeString:headerLine];
+    }
+    [self socket:response.socket writeString:@"\r\n"];
+}
+
 - (void)responseWantToFinish:(GCDResponse *)response {
     if (response.chunked) {
         NSData * zero = [@"0\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding];
@@ -334,7 +336,7 @@ static const NSInteger kHttpdStateInError = -1;
     }
 }
 
-- (void)response:(GCDResponse *)response didReceivedData:(NSData *)data {
+- (void)response:(GCDResponse *)response hasData:(NSData *)data {
     if (response.chunked) {
         NSMutableData * buffer = [[NSMutableData alloc] init];
         NSString * cntData = [NSString stringWithFormat:@"%X\r\n", data.length];
@@ -402,17 +404,18 @@ static const NSInteger kHttpdStateInError = -1;
     if ([[relativePath substringFromIndex:relativePath.length-1] isEqualToString:@"/"]) {
         relativePath = [NSString stringWithFormat:@"%@index.html", relativePath];
     }
+    
     NSString * directory = request.selectedRouterRole.userData;
     NSMutableArray * arr =  [NSMutableArray arrayWithArray:[directory componentsSeparatedByString:@"/"]];
     [arr addObjectsFromArray:[relativePath componentsSeparatedByString:@"/"]];
     NSString * absPath = [arr componentsJoinedByString:@"/"];
     NSFileManager * fileManager = [NSFileManager defaultManager];
     if (![fileManager fileExistsAtPath:absPath]) {
-        return [GCDResponse responseWithStatus:404 message:@"Object Not Found"];
+        return [request responseWithStatus:404 message:@"Object Not Found"];
     }
 
     NSData * data = [NSData dataWithContentsOfFile:absPath];
-    GCDResponse * response = [GCDResponse responseWithContentLength:data.length];
+    GCDResponse * response = [request responseWithContentLength:data.length];
     [response.headers setObject:[NSString stringWithFormat:@"max-age=%d", self.maxAgeOfCacheControl] forKey:@"Cache-Control"];
     [response.headers setObject:[[self class] contentTypeForExtension:[absPath pathExtension]] forKey:@"Content-Type"];
     [response sendData:data];
@@ -430,10 +433,10 @@ static const NSInteger kHttpdStateInError = -1;
     NSString * resource = request.selectedRouterRole.userData;
     NSURL * url = [bundle URLForResource:resource withExtension:nil];
     if (url == nil) {
-        return [GCDResponse responseWithStatus:404 message:@"Resource cannot be located\n"];
+        return [request responseWithStatus:404 message:@"Resource cannot be located\n"];
     }
     NSData * data = [NSData dataWithContentsOfURL:url];
-    GCDResponse * response = [GCDResponse responseWithContentLength:data.length];
+    GCDResponse * response = [request responseWithContentLength:data.length];
     [response.headers setObject:[NSString stringWithFormat:@"max-age=%d", self.maxAgeOfCacheControl] forKey:@"Cache-Control"];
     [response.headers setObject:[[self class] contentTypeForExtension:[resource pathExtension]] forKey:@"Content-Type"];
     [response sendData:data];
@@ -443,7 +446,8 @@ static const NSInteger kHttpdStateInError = -1;
 // Handlers
 // error response
 - (void)socket:(GCDAsyncSocket *)sock httpErrorStatus:(int32_t)status message:(NSString *)message {
-    GCDResponse * response = [GCDResponse responseWithStatus:status message:message];
+    GCDRequest * request = (GCDRequest*)sock.userData;
+    GCDResponse * response = [request responseWithStatus:status message:message];
     [self socket:sock respond:response];
 }
 

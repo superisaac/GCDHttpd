@@ -8,44 +8,20 @@
 
 #import "GCDResponse.h"
 
+static const NSInteger kResponseStateInit = 0;
+static const NSInteger kResponseStateSentHeaders = 1;
+static const NSInteger kResponseStateFinished = 2;
+
 @implementation GCDResponse {
     BOOL _finished;
 }
 @synthesize status, headers, chunked, delegate, socket, deferred;
 
-+ (GCDResponse *)responseChunked {
-    GCDResponse * response = [[GCDResponse alloc] init];
-    response.chunked = YES;
-    response.deferred = YES;
-    [response.headers setObject:@"chunked" forKey:@"Transfer-Encoding"];
-    return response;
-} 
-
-+ (GCDResponse *)responseWithContentLength:(NSInteger)len {
-    GCDResponse * response = [[GCDResponse alloc] init];
-    if (len > 0) {
-        [response.headers setObject:[NSString stringWithFormat:@"%d", len] forKey:@"Content-Length"];
-    }
-    return response;
-}
-
-+ (GCDResponse*)responseWithStatus:(int32_t)status message:(NSString *)message {
-    GCDResponse * response = [self responseWithContentLength:message.length];
-    response.status = status;
-    [response sendString:message];
-    return response;
-}
-
-+ (GCDResponse*)responseWithStatus:(int32_t)status {
-    NSString * message = [self statusBrief:status];
-    return [self responseWithStatus:status message:message];
-}
-
-- (id)init {
+- (id)initWithDelegate:(id<GCDResponseDelegate>)del socket:(GCDAsyncSocket *)sock {
     self = [super init];
     if (self) {
-        _buffer = [[NSMutableData alloc] init];
-        _finished = FALSE;
+        self.delegate = del;
+        self.socket = sock;
         self.status = 200;
         self.chunked = NO;
         self.deferred = NO;
@@ -90,22 +66,13 @@
         NSLog(@"Already finished");
         return;
     }
+    
+    if (self.state == kResponseStateInit) {
+        [self.delegate responseBeginSendData:self];
+        self.state = kResponseStateSentHeaders;
+    }
     if (self.delegate) {
-        [self sendBuffer];
-        [self.delegate response:self didReceivedData:data];
-    } else {
-        [_buffer appendData:data];
-    }
-}
-
-- (void)sendBuffer {
-    if (_finished) {
-        NSLog(@"Already finished");
-        return;
-    }
-    if (_buffer.length > 0) {
-        [self.delegate response:self didReceivedData:[NSData dataWithData:_buffer]];
-        [_buffer setLength:0];
+        [self.delegate response:self hasData:data];
     }
 }
 

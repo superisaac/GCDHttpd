@@ -11,27 +11,24 @@
 
 @class GCDResponse;
 @protocol GCDResponseDelegate <NSObject>
-- (void)response:(GCDResponse *)response didReceivedData:(NSData *)data;
+- (void)response:(GCDResponse *)response hasData:(NSData *)data;
+- (void)responseBeginSendData:(GCDResponse *)response;
 - (void)responseWantToFinish:(GCDResponse *)response;
 @end
 
 @interface GCDResponse : NSObject
 
+@property (nonatomic) NSInteger state;
 @property (nonatomic) int32_t status;
 @property (nonatomic, retain) NSMutableDictionary * headers;
-@property (nonatomic, readonly) NSMutableData * buffer;
 @property (nonatomic) BOOL chunked;
 @property (nonatomic) BOOL deferred;
 @property (nonatomic, weak) id<GCDResponseDelegate> delegate;
-@property (nonatomic, retain) GCDAsyncSocket * socket;
+@property (nonatomic, weak) GCDAsyncSocket * socket;
 
-+ (GCDResponse *)responseChunked;
-+ (GCDResponse *)responseWithContentLength:(NSInteger)len;
-+ (GCDResponse *)responseWithStatus:(int32_t)status message:(NSString *)message;
-+ (GCDResponse*)responseWithStatus:(int32_t)status;
 + (NSString *) statusBrief:(int32_t)status;
 
-- (void)sendBuffer;
+- (id)initWithDelegate:(id<GCDResponseDelegate>)del socket:(GCDAsyncSocket *)sock;
 - (void)sendData:(NSData *)data;
 - (void)sendString:(NSString *)str;
 - (void)finish;

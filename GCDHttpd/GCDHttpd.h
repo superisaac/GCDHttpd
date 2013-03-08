@@ -34,6 +34,7 @@
 - (void)start;
 - (void)stop;
 
+- (dispatch_queue_t)dispatchQueue;
 - (GCDRouterRole *)addTarget:(id)target action:(SEL)action forMethod:(NSString *)method role:(NSString *)role;
 - (void)serveDirectory:(NSString *)directory  forURLPrefix:(NSString *)prefix;
 - (void)serveResource:(NSString *)resource forRole:(NSString *)resourceRole;

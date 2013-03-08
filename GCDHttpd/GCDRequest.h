@@ -11,9 +11,13 @@
 #import "GCDRouterRole.h"
 #import "GCDMultipart.h"
 
+@class GCDHttpd;
+@class GCDResponse;
+
 @interface GCDRequest : NSObject
 
 @property (nonatomic, weak) GCDAsyncSocket * socket;
+@property (nonatomic, weak) GCDHttpd * httpd;
 @property (nonatomic, retain) NSString * method;
 @property (nonatomic, readonly) NSURL * requestURL;
 @property (nonatomic, retain) NSString * pathString;
@@ -29,8 +33,13 @@
 @property (nonatomic, retain) NSDictionary * pathBindings;
 @property (nonatomic, retain) GCDRouterRole * selectedRouterRole;
 
+- (GCDResponse *)responseChunked;
+- (GCDResponse *)responseWithContentLength:(NSInteger)len;
+- (GCDResponse *)responseWithStatus:(int32_t)status message:(NSString *)message;
+- (GCDResponse*)responseWithStatus:(int32_t)status;
 
 - (NSString *)multipartBoundaryWithPrefix:(NSString *)prefix;
 - (BOOL)isMultipart;
 - (void)setMetaVariable:(NSString *)value forKey:(NSString *)key;
+
 @end

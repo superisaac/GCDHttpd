@@ -30,6 +30,7 @@
     self.httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_main_queue()];
     self.httpd.delegate = self;
     self.httpd.port = self.httpdPort;
+    [self.httpd serveDirectory:NSTemporaryDirectory() forURLPrefix:@"/tmp/"];
     [self.httpd addTarget:self action:@selector(helloPage:) forMethod:@"GET" role:@"/hello"];
     [self.httpd addTarget:self action:@selector(deferredPage:) forMethod:@"GET" role:@"/deferred"];
     [self.httpd addTarget:self action:@selector(basicAuthPage:) forMethod:@"GET" role:@"/auth"];
@@ -78,6 +79,10 @@
         NSData * fileData = [fileHandle readDataToEndOfFile];
         [fileHandle closeFile];
         NSLog(@"file content (%@)", [[NSString alloc ] initWithData:fileData encoding:NSUTF8StringEncoding]);
+        NSString * destFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:@"aa.png"];
+        NSFileManager * fileManager = [NSFileManager defaultManager];
+        [fileManager copyItemAtPath:part.tmpFilename toPath:destFilename error:nil];
+        
     }
     return @"ok\n";
 }
@@ -85,8 +90,9 @@
 - (id)basicAuthPage:(GCDRequest*)request {
     NSString * authUser = request.META[@"HTTP_AUTH_USER"];
     NSString * password = request.META[@"HTTP_AUTH_PW"];
+    
     if (authUser == nil || password == nil || ![authUser isEqualToString:@"admin"] || ![password isEqualToString:@"123456"]) {
-        GCDResponse * response = [GCDResponse responseWithStatus:401 message:@"Unauthorized"];
+        GCDResponse * response = [request responseWithStatus:401 message:@"Unauthorized"];
         response.headers[@"WWW-Authenticate"] = @"Basic realm=\"MyIphone\"";
         return response;
     } else {
@@ -96,7 +102,7 @@
 
 
 - (id)deferredPage:(GCDRequest*)request {
-    GCDResponse * response = [GCDResponse responseChunked];
+    GCDResponse * response = [request responseChunked];
     
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));

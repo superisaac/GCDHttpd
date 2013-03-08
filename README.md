@@ -32,7 +32,7 @@ grand central dispatch make the multi core programming easy.
 
 - (id)deferredIndex:(GCDRequest*)request {
     NSString * message = [NSString stringWithFormat:@"hello %@", request.pathBindings[@"userid"]];
-    GCDResponse * response = [GCDResponse responseWithContentLength:message.length];
+    GCDResponse * response = [request responseWithContentLength:message.length];
     response.deferred = YES;
     
     // This request lasts 2 seconds

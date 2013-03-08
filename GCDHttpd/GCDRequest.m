@@ -7,7 +7,10 @@
 //
 
 #import "GCDRequest.h"
+#import "GCDResponse.h"
+
 #import "NSString+QueryString.h"
+#import "GCDHttpd.h"
 
 @implementation GCDRequest {
     NSString * _multipartBoundary;
@@ -15,7 +18,7 @@
 }
 
 @synthesize META, FILES, POST, pathBindings, pathString;
-@synthesize method, selectedRouterRole, multipart;
+@synthesize method, selectedRouterRole, multipart, httpd;
 
 - (id)init {
     self = [super init];
@@ -95,4 +98,36 @@
     self.META[key] = value;
 }
 
+// Generate response
+- (GCDResponse *)responseChunked {
+    GCDResponse * response = [[GCDResponse alloc] initWithDelegate:self.httpd socket:self.socket];
+    response.chunked = YES;
+    response.deferred = YES;
+    [response.headers setObject:@"chunked" forKey:@"Transfer-Encoding"];
+    return response;
+}
+
+- (GCDResponse *)responseWithContentLength:(NSInteger)len {
+    GCDResponse * response = [[GCDResponse alloc] initWithDelegate:self.httpd socket:self.socket];
+    if (len > 0) {
+        [response.headers setObject:[NSString stringWithFormat:@"%d", len] forKey:@"Content-Length"];
+    }
+    return response;
+}
+
+- (GCDResponse*)responseWithStatus:(int32_t)status message:(NSString *)message {
+    GCDResponse * response = [self responseWithContentLength:message.length];
+    response.status = status;
+    response.deferred = YES;
+    dispatch_async(self.httpd.dispatchQueue, ^{
+        [response sendString:message];
+        [response finish];
+    });
+    return response;
+}
+
+- (GCDResponse*)responseWithStatus:(int32_t)status {
+    NSString * message = [GCDResponse statusBrief:status];
+    return [self responseWithStatus:status message:message];
+}
 @end
