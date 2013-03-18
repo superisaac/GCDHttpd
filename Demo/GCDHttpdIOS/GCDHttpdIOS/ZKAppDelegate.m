@@ -75,14 +75,16 @@
 - (id)uploadPage:(GCDRequest *)request {
     GCDFormPart * part = request.FILES[@"ff"];
     if (part) {
-        NSFileHandle * fileHandle = [NSFileHandle fileHandleForReadingAtPath:part.tmpFilename];
-        NSData * fileData = [fileHandle readDataToEndOfFile];
-        [fileHandle closeFile];
-        NSLog(@"file content (%@)", [[NSString alloc ] initWithData:fileData encoding:NSUTF8StringEncoding]);
-        NSString * destFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:@"aa.png"];
-        NSFileManager * fileManager = [NSFileManager defaultManager];
-        [fileManager copyItemAtPath:part.tmpFilename toPath:destFilename error:nil];
+        UIImage * image = [UIImage imageWithContentsOfFile:part.tmpFilename];
+        UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
         
+        NSData * imageData = UIImageJPEGRepresentation(image, 0.9);
+        NSString * destImageFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:@"uploaded.jpg"];
+        [imageData writeToFile:destImageFilename atomically:NO];
+        
+        GCDResponse * response = [request responseWithStatus:302];
+        response.headers[@"Location"] = @"/tmp/uploaded.jpg";
+        return response;
     }
     return @"ok\n";
 }
@@ -113,11 +115,22 @@
     return response;
 }
 
+
 #pragma mark - GCDHttpdDelegate
 - (id)willStartRequest:(GCDRequest *)request {
     // Do somthing to handle request
     NSLog(@"request %@", request.requestURL);
     return nil;
+}
+
+// Save image
+-(void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error) {
+     /*   UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Save photo eror", nil) message:[error description] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+        [alertView show]; */
+        NSLog(@"save image failed!");
+    }
+    NSLog(@"image saved %@", contextInfo);
 }
 
 @end

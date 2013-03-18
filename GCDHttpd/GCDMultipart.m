@@ -67,7 +67,6 @@ static const long kTagMultipartHeader = 1106;
     if ([self isFile]) {
         if (_fileHandle == nil) {
             self.tmpFilename = [[self class ] generateTemporaryFilename];
-            NSLog(@"tmp file name %@", tmpFilename);
             _fileHandle = [NSFileHandle fileHandleForWritingAtPath:self.tmpFilename];
         }
         [_fileHandle writeData:newData];
@@ -93,6 +92,10 @@ static const long kTagMultipartHeader = 1106;
         }
         self.tmpFilename = nil;
     }
+}
+
+- (void)dealloc {
+    [self close];
 }
 
 - (void)setContentDisposition:(NSString *)disposition {
@@ -161,6 +164,15 @@ static const long kTagMultipartHeader = 1106;
         [self watchToData:_boundaryData tag:kTagMultipartBoundary];    
     }
     return self;
+}
+
+- (void)assertTrue:(BOOL)condition message:(NSString *)message {
+    if (!condition) {
+        //NSDictionary * excInfo = [NSDictionary dictionaryWithObject:message forKey:@"description"];
+       //NSException * exception = [NSException exceptionWithName:@"MultipartException" reason:message userInfo:excInfo];
+        //@throw exception;
+        [NSException raise:@"Multipartexception" format:@"%@", message, nil];
+    }
 }
 
 - (void)watchToData:(NSData *)data tag:(long)tag {
@@ -249,6 +261,8 @@ static const long kTagMultipartHeader = 1106;
                 }
             }  else {   
                 [_lastPart pushData:data];
+                [self watchToData:_CRLFAndBoundaryData orLength:4096 tag:kTagMultipartBoundary];
+                return;                
             }
         }
         [self watchToLength:2 tag:kTagMultipartEndTest];
@@ -257,15 +271,16 @@ static const long kTagMultipartHeader = 1106;
             _lastPart = [[GCDFormPart alloc] init];
             [self watchToData:[GCDAsyncSocket CRLFData] tag:kTagMultipartHeader];
         } else {
-            NSAssert([data isEqualToData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]], @"Unexpected chars beyond CRLF and --");
+            [self assertTrue:[data isEqualToData:[@"--" dataUsingEncoding:NSASCIIStringEncoding]]
+                    message:@"Unexpected chars beyond CR`LF and --"];
             _lastPart = nil;
             self.finished = YES;
         }
     } else if (tag == kTagMultipartHeader) {
         if (data.length > 2) {
-            NSAssert(_lastPart != nil, @"Chunk is null");
+            [self assertTrue:(_lastPart != nil) message:@"Part is null"];
             
-            NSString * line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSString * line = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             NSRange range = [line rangeOfString:@":"];
             NSString * key = [line substringToIndex:range.location];

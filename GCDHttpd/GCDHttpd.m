@@ -108,6 +108,26 @@ static const NSInteger kHttpdStateInError = -1;
     self.httpdState = kHttpdStateStopped;
 }
 
+
+- (void)assertTrue:(BOOL)condition message:(NSString *)message {
+    if (!condition) {
+        NSDictionary * excInfo = [NSDictionary dictionaryWithObject:message forKey:@"description"];
+        NSException * exception = [NSException exceptionWithName:@"GCDHttpd" reason:message userInfo:excInfo];
+        //            NSError * except = [NSError errorWithDomain:@"MultipartError" code:1021 userInfo:errorInfo];
+        //        NSLog(@"error %@ on multi part", error);
+        @throw exception;
+    }
+}
+
+
+- (void)___assertTrue:(BOOL)condition message:(NSString *)message {
+    if (!condition) {
+        NSDictionary * errorInfo = [NSDictionary dictionaryWithObject:message forKey:@"description"];
+        NSError * error = [NSError errorWithDomain:@"GCDHttpd" code:1021 userInfo:errorInfo];
+        @throw error;
+    }
+}
+
 - (void)socket:(GCDAsyncSocket*)sock readLineWithTag:(long)tag {
     [sock readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:tag];
 }
@@ -155,6 +175,15 @@ static const NSInteger kHttpdStateInError = -1;
  * The big state machine to handle HTTP Request and Response
  */
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
+    @try {
+        [self socket:sock reallyReadData:data withTag:tag];
+    } @catch (NSException * e) {
+        NSLog(@"Exception on parsing data %@", [e description]);
+        [self socket:sock httpErrorStatus:400 message:@"Bad request\n"];
+    }
+}
+
+- (void)socket:(GCDAsyncSocket *)sock reallyReadData:(NSData *)data withTag:(long)tag {
     GCDRequest * request = (GCDRequest *)(sock.userData);
     if (tag > kTagReadHeaderLine) {
         request.readedBodyLength += data.length;
@@ -167,7 +196,7 @@ static const NSInteger kHttpdStateInError = -1;
         NSString * line = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
         line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSArray * parts = [line componentsSeparatedByString:@" "];
-        assert(parts.count == 3);
+        [self assertTrue:(parts.count == 3) message:@"Bad status line"];
         request.method = [parts objectAtIndex:0];
         request.pathString = [parts objectAtIndex:1];
         [self socket:sock readLineWithTag:kTagReadHeaderLine];
@@ -198,7 +227,7 @@ static const NSInteger kHttpdStateInError = -1;
                     NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
                     request.multipart = [[GCDMultipart alloc] initWithBundary:boundary];
                     
-                    NSAssert(boundary != nil, @"boundary is nil");
+                    [self assertTrue:(boundary != nil) message:@"boundary is nil"];
                     [sock readDataWithTimeout:-1 tag:kTagReadMultipartBody];
                     return;
                 }
@@ -215,7 +244,7 @@ static const NSInteger kHttpdStateInError = -1;
             [request.POST setValuesForKeysWithDictionary:[postBody explodeToQueryDictionary]];
         } else if ([request isMultipart]){
             NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
-            NSAssert(boundary != nil, @"boundary is nil");
+            [self assertTrue:(boundary != nil) message:@"boundary is nil"];
             [sock readDataToData:[boundary dataUsingEncoding:NSASCIIStringEncoding] withTimeout:-1 tag:kTagReadMultipartBoundary];
             return;
         }
@@ -223,7 +252,6 @@ static const NSInteger kHttpdStateInError = -1;
     } else if (tag == kTagReadMultipartBody) {
         [request.multipart feed:data];
         if (request.multipart.finished) {
-            NSLog(@"ok finished %@", request.multipart.POST);
             request.FILES = request.multipart.FILES;
             request.POST = request.multipart.POST;
             [self socket:sock endParsingRequest:request];
@@ -330,7 +358,7 @@ static const NSInteger kHttpdStateInError = -1;
     if(request) {
         for (NSString * name in request.FILES) {
             GCDFormPart * part = request.FILES[name];
-            [part close];
+            //[part close];
         }
         request.FILES = nil;
     }
