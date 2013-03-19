@@ -175,12 +175,7 @@ static const NSInteger kHttpdStateInError = -1;
  * The big state machine to handle HTTP Request and Response
  */
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    @try {
-        [self socket:sock reallyReadData:data withTag:tag];
-    } @catch (NSException * e) {
-        NSLog(@"Exception on parsing data %@", [e description]);
-        [self socket:sock httpErrorStatus:400 message:@"Bad request\n"];
-    }
+    [self socket:sock reallyReadData:data withTag:tag];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock reallyReadData:(NSData *)data withTag:(long)tag {
@@ -250,7 +245,12 @@ static const NSInteger kHttpdStateInError = -1;
         }
         [self socket:sock endParsingRequest:request];
     } else if (tag == kTagReadMultipartBody) {
-        [request.multipart feed:data];
+        NSError * error;
+        [request.multipart feed:data error:&error];
+        if (error != nil) {
+            [self socket:sock httpErrorStatus:400 message:@"Bad request\n"];
+            return;
+        }
         if (request.multipart.finished) {
             request.FILES = request.multipart.FILES;
             request.POST = request.multipart.POST;

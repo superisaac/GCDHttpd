@@ -30,6 +30,6 @@
 @property (nonatomic, retain) NSMutableDictionary * FILES;
 
 - (id)initWithBundary:(NSString*)boundary;
-- (void)feed:(NSData*)data;
+- (void)feed:(NSData*)data error:(NSError * __autoreleasing *)error;
 
 @end

@@ -166,13 +166,15 @@ static const long kTagMultipartHeader = 1106;
     return self;
 }
 
-- (void)assertTrue:(BOOL)condition message:(NSString *)message {
+- (NSError *)assertTrue:(BOOL)condition message:(NSString *)message {
     if (!condition) {
-        //NSDictionary * excInfo = [NSDictionary dictionaryWithObject:message forKey:@"description"];
+        NSDictionary * excInfo = [NSDictionary dictionaryWithObject:message forKey:@"description"];
        //NSException * exception = [NSException exceptionWithName:@"MultipartException" reason:message userInfo:excInfo];
         //@throw exception;
-        [NSException raise:@"Multipartexception" format:@"%@", message, nil];
+        //[NSException raise:@"Multipartexception" format:@"%@", message, nil];
+        return [NSError errorWithDomain:@"MultipartError" code:2013 userInfo:excInfo];
     }
+    return nil;
 }
 
 - (void)watchToData:(NSData *)data tag:(long)tag {
@@ -194,11 +196,18 @@ static const long kTagMultipartHeader = 1106;
     _watchLength = length;
 }
 
-- (void)feed:(NSData*)data {
+- (void)feed:(NSData*)data error:(NSError * __autoreleasing *)perror {
     [_buffer appendData:data];
-    NSInteger adv = [self advance];
+    *perror = nil;
+    NSInteger adv = [self advanceWitherror:perror];
+    if (*perror != nil) {
+        return;
+    }
     while (adv > 0 && !self.finished) {
-        adv = [self advance];
+        adv = [self advanceWitherror:perror];
+        if (*perror != nil) {
+            return;
+        }
     }
     if (self.finished) {
         return;
@@ -210,42 +219,44 @@ static const long kTagMultipartHeader = 1106;
     }
 }
 
-- (NSInteger)advance {
+- (NSInteger)advanceWitherror:(NSError * __autoreleasing *)perror {
+    NSInteger advancedLength = 0;
     if (_watchType == kWatchTypeLength) {
         if (_buffer.length >= _watchLength + _bufferOffset) {
             NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, _watchLength)];
             _bufferOffset += _watchLength;
-            [self receviedData:data finished:YES tag:_tag];
-            return _watchLength;
+            *perror = [self receviedData:data finished:YES tag:_tag];
+            advancedLength = _watchLength;
         }
     } else if (_watchType == kWatchTypeData) {
         NSInteger index = [_buffer firstPostionOfData:_watchData offset:_bufferOffset];
         if (index >= 0) {
-            NSInteger adv = index + _watchData.length - _bufferOffset;
-            NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, adv)];            
+            advancedLength = index + _watchData.length - _bufferOffset;
+            NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, advancedLength)];            
             _bufferOffset = index + _watchData.length;
-            [self receviedData:data finished:YES tag:_tag];
-            return adv;
+            *perror = [self receviedData:data finished:YES tag:_tag];
         }
     } else if (_watchType == kWatchTypeDataOrLength) {
         NSInteger index = [_buffer firstPostionOfData:_watchData offset:_bufferOffset];
         if (index >= 0) {
-            NSInteger adv = index + _watchData.length - _bufferOffset;
-            NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, adv)];
+            advancedLength = index + _watchData.length - _bufferOffset;
+            NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, advancedLength)];
             _bufferOffset = index + _watchData.length;
-            [self receviedData:data finished:YES tag:_tag];
-            return adv;
+            *perror = [self receviedData:data finished:YES tag:_tag];
         } else if (_buffer.length >= _watchLength + _bufferOffset + _watchData.length) {
             NSData * data = [_buffer subdataWithRange:NSMakeRange(_bufferOffset, _watchLength)];
             _bufferOffset += _watchLength;
-            [self receviedData:data finished:NO tag:_tag];
-            return _watchLength;
+            *perror = [self receviedData:data finished:NO tag:_tag];
+            advancedLength = _watchLength;
         }
     }
-    return 0;
+    if (*perror != nil) {
+        return -1;
+    }
+    return advancedLength;
 }
 
-- (void)receviedData:(NSData *)data finished:(BOOL)finished tag:(long)tag {
+- (NSError *)receviedData:(NSData *)data finished:(BOOL)finished tag:(long)tag {
     if (tag == kTagMultipartBoundary) {
         if (_lastPart) {
             if (finished) {
@@ -262,7 +273,7 @@ static const long kTagMultipartHeader = 1106;
             }  else {   
                 [_lastPart pushData:data];
                 [self watchToData:_CRLFAndBoundaryData orLength:4096 tag:kTagMultipartBoundary];
-                return;                
+                return nil;
             }
         }
         [self watchToLength:2 tag:kTagMultipartEndTest];
@@ -271,14 +282,20 @@ static const long kTagMultipartHeader = 1106;
             _lastPart = [[GCDFormPart alloc] init];
             [self watchToData:[GCDAsyncSocket CRLFData] tag:kTagMultipartHeader];
         } else {
-            [self assertTrue:[data isEqualToData:[@"--" dataUsingEncoding:NSASCIIStringEncoding]]
+            NSError * error = [self assertTrue:[data isEqualToData:[@"--" dataUsingEncoding:NSASCIIStringEncoding]]
                     message:@"Unexpected chars beyond CR`LF and --"];
+            if (error != nil) {
+                return error;
+            }
             _lastPart = nil;
             self.finished = YES;
         }
     } else if (tag == kTagMultipartHeader) {
         if (data.length > 2) {
-            [self assertTrue:(_lastPart != nil) message:@"Part is null"];
+            NSError * error = [self assertTrue:(_lastPart != nil) message:@"Part is null"];
+            if (error != nil) {
+                return error;
+            }
             
             NSString * line = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -301,6 +318,7 @@ static const long kTagMultipartHeader = 1106;
             [self watchToData:_CRLFAndBoundaryData orLength:4096 tag:kTagMultipartBoundary];
         }
     }
+    return nil;
 }
 
 
