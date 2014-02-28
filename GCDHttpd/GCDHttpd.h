@@ -18,7 +18,7 @@
 - (void) didFinishedRequest:(GCDRequest *)request withResponse:(GCDResponse *)response;
 @end
 
-@interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate>
+@interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate, NSNetServiceDelegate>
 
 @property (nonatomic) int16_t port;
 @property (nonatomic, retain) NSString * interface;
