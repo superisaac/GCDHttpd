@@ -16,6 +16,10 @@
 #import "NSURL+IntactPath.h"
 #import "GCDMultipart.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
+
 static const long kTagWriteAndClose = 1000;
 
 static const long kTagReadStatusLine = 1101;

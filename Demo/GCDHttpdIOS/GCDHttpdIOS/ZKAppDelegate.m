@@ -11,11 +11,9 @@
 #import "ZKAddressListViewController.h"
 
 @implementation ZKAppDelegate
-@synthesize httpd, httpdPort;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.httpdPort = 3000;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     UINavigationController * navController = [[UINavigationController alloc] initWithNibName:nil bundle:nil];
@@ -27,16 +25,8 @@
     [self.window makeKeyAndVisible];
     
     // Initialize the httpd
-    self.httpd = [[GCDHttpd alloc] initWithDispatchQueue:dispatch_get_main_queue()];
-    self.httpd.delegate = self;
-    self.httpd.port = self.httpdPort;
-    [self.httpd serveDirectory:NSTemporaryDirectory() forURLPrefix:@"/tmp/"];
-    [self.httpd addTarget:self action:@selector(helloPage:) forMethod:@"GET" role:@"/hello"];
-    [self.httpd addTarget:self action:@selector(deferredPage:) forMethod:@"GET" role:@"/deferred"];
-    [self.httpd addTarget:self action:@selector(basicAuthPage:) forMethod:@"GET" role:@"/auth"];
-    [self.httpd addTarget:self action:@selector(uploadPage:) forMethod:@"POST" role:@"/upload"];
-    [self.httpd serveResource:@"index.html" forRole:@"/"];
-    [self.httpd start];
+    self.httpdService = [[ZKHTTPDService alloc] initWithPort:3000];
+    [self.httpdService start];
     return YES;
 }
 

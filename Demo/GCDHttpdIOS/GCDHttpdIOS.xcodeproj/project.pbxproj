@@ -7,11 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0668290C16E2F42500C33092 /* NSMutableData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290B16E2F42500C33092 /* NSMutableData+Utils.m */; };
-		0668290F16E30C0400C33092 /* GCDMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290E16E30C0400C33092 /* GCDMultipart.m */; };
 		06CD27FB16DB45F500C49E62 /* ZKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27F916DB45F500C49E62 /* ZKWebViewController.m */; };
 		06CD27FC16DB45F500C49E62 /* ZKWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06CD27FA16DB45F500C49E62 /* ZKWebViewController.xib */; };
-		06CD27FF16DB4E0100C49E62 /* NSData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27FE16DB4E0100C49E62 /* NSData+Utils.m */; };
 		06F9C6CF16D723090007FDB9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6CE16D723090007FDB9 /* UIKit.framework */; };
 		06F9C6D116D723090007FDB9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D016D723090007FDB9 /* Foundation.framework */; };
 		06F9C6D316D723090007FDB9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D216D723090007FDB9 /* CoreGraphics.framework */; };
@@ -22,17 +19,91 @@
 		06F9C6E316D723090007FDB9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06F9C6E216D723090007FDB9 /* Default@2x.png */; };
 		06F9C6E516D723090007FDB9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06F9C6E416D723090007FDB9 /* Default-568h@2x.png */; };
 		06F9C6F316D724A30007FDB9 /* ZKAddressListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C6F216D724A30007FDB9 /* ZKAddressListViewController.m */; };
-		06F9C74216D724F00007FDB9 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73516D724F00007FDB9 /* GCDAsyncSocket.m */; };
-		06F9C74316D724F00007FDB9 /* GCDHttpd.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73716D724F00007FDB9 /* GCDHttpd.m */; };
-		06F9C74416D724F00007FDB9 /* GCDRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73916D724F00007FDB9 /* GCDRequest.m */; };
-		06F9C74516D724F00007FDB9 /* GCDResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73B16D724F00007FDB9 /* GCDResponse.m */; };
-		06F9C74616D724F00007FDB9 /* GCDRouterRole.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73D16D724F00007FDB9 /* GCDRouterRole.m */; };
-		06F9C74716D724F00007FDB9 /* NSString+QueryString.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73F16D724F00007FDB9 /* NSString+QueryString.m */; };
-		06F9C74816D724F00007FDB9 /* NSURL+IntactPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C74116D724F00007FDB9 /* NSURL+IntactPath.m */; };
 		06F9C74A16D7264F0007FDB9 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C74916D7264F0007FDB9 /* Security.framework */; };
 		06F9C74C16D726890007FDB9 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C74B16D726890007FDB9 /* CFNetwork.framework */; };
 		06F9C74F16D728A90007FDB9 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 06F9C74E16D728A90007FDB9 /* index.html */; };
+		A00FCB0C18C03E0F00E54B73 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D016D723090007FDB9 /* Foundation.framework */; };
+		A00FCB1118C03E1000E54B73 /* GCDHttpd_iOS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A00FCB1018C03E1000E54B73 /* GCDHttpd_iOS.h */; };
+		A00FCB1318C03E1000E54B73 /* GCDHttpd_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB1218C03E1000E54B73 /* GCDHttpd_iOS.m */; };
+		A00FCB1818C03E1000E54B73 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCAF218C03ABB00E54B73 /* XCTest.framework */; };
+		A00FCB1918C03E1000E54B73 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6D016D723090007FDB9 /* Foundation.framework */; };
+		A00FCB1A18C03E1000E54B73 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C6CE16D723090007FDB9 /* UIKit.framework */; };
+		A00FCB1D18C03E1000E54B73 /* libGCDHttpd_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB0B18C03E0F00E54B73 /* libGCDHttpd_iOS.a */; };
+		A00FCB2318C03E1000E54B73 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB2118C03E1000E54B73 /* InfoPlist.strings */; };
+		A00FCB2518C03E1000E54B73 /* GCDHttpd_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB2418C03E1000E54B73 /* GCDHttpd_iOSTests.m */; };
+		A00FCB3218C03E2C00E54B73 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB3118C03E2C00E54B73 /* Cocoa.framework */; };
+		A00FCB3C18C03E2C00E54B73 /* GCDHttpd_OSX.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB3B18C03E2C00E54B73 /* GCDHttpd_OSX.m */; };
+		A00FCB4218C03E2C00E54B73 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCAF218C03ABB00E54B73 /* XCTest.framework */; };
+		A00FCB4318C03E2C00E54B73 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB3118C03E2C00E54B73 /* Cocoa.framework */; };
+		A00FCB4618C03E2C00E54B73 /* GCDHttpd_OSX.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB3018C03E2C00E54B73 /* GCDHttpd_OSX.dylib */; };
+		A00FCB4C18C03E2C00E54B73 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB4A18C03E2C00E54B73 /* InfoPlist.strings */; };
+		A00FCB4E18C03E2C00E54B73 /* GCDHttpd_OSXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB4D18C03E2C00E54B73 /* GCDHttpd_OSXTests.m */; };
+		A00FCB5618C03E3A00E54B73 /* GCDHttpd.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73716D724F00007FDB9 /* GCDHttpd.m */; };
+		A00FCB5718C03E3A00E54B73 /* GCDRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73916D724F00007FDB9 /* GCDRequest.m */; };
+		A00FCB5818C03E3A00E54B73 /* GCDResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73B16D724F00007FDB9 /* GCDResponse.m */; };
+		A00FCB5918C03E3A00E54B73 /* GCDRouterRole.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73D16D724F00007FDB9 /* GCDRouterRole.m */; };
+		A00FCB5A18C03E3A00E54B73 /* NSString+QueryString.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73F16D724F00007FDB9 /* NSString+QueryString.m */; };
+		A00FCB5B18C03E3A00E54B73 /* NSURL+IntactPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C74116D724F00007FDB9 /* NSURL+IntactPath.m */; };
+		A00FCB5C18C03E3A00E54B73 /* NSData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27FE16DB4E0100C49E62 /* NSData+Utils.m */; };
+		A00FCB5D18C03E3A00E54B73 /* NSMutableData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290B16E2F42500C33092 /* NSMutableData+Utils.m */; };
+		A00FCB5E18C03E3A00E54B73 /* GCDMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290E16E30C0400C33092 /* GCDMultipart.m */; };
+		A00FCB6018C03E3B00E54B73 /* GCDHttpd.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73716D724F00007FDB9 /* GCDHttpd.m */; };
+		A00FCB6118C03E3B00E54B73 /* GCDRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73916D724F00007FDB9 /* GCDRequest.m */; };
+		A00FCB6218C03E3B00E54B73 /* GCDResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73B16D724F00007FDB9 /* GCDResponse.m */; };
+		A00FCB6318C03E3B00E54B73 /* GCDRouterRole.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73D16D724F00007FDB9 /* GCDRouterRole.m */; };
+		A00FCB6418C03E3B00E54B73 /* NSString+QueryString.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73F16D724F00007FDB9 /* NSString+QueryString.m */; };
+		A00FCB6518C03E3B00E54B73 /* NSURL+IntactPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C74116D724F00007FDB9 /* NSURL+IntactPath.m */; };
+		A00FCB6618C03E3B00E54B73 /* NSData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 06CD27FE16DB4E0100C49E62 /* NSData+Utils.m */; };
+		A00FCB6718C03E3B00E54B73 /* NSMutableData+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290B16E2F42500C33092 /* NSMutableData+Utils.m */; };
+		A00FCB6818C03E3B00E54B73 /* GCDMultipart.m in Sources */ = {isa = PBXBuildFile; fileRef = 0668290E16E30C0400C33092 /* GCDMultipart.m */; };
+		A00FCB6918C03E5200E54B73 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C74916D7264F0007FDB9 /* Security.framework */; };
+		A00FCB6E18C03E8000E54B73 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F9C74B16D726890007FDB9 /* CFNetwork.framework */; };
+		A00FCB7018C03E8C00E54B73 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB6F18C03E8C00E54B73 /* Security.framework */; };
+		A00FCB7218C03ED900E54B73 /* libGCDHttpd_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB0B18C03E0F00E54B73 /* libGCDHttpd_iOS.a */; };
+		A00FCB7818C03F3100E54B73 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB3118C03E2C00E54B73 /* Cocoa.framework */; };
+		A00FCB7E18C03F3100E54B73 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB7C18C03F3100E54B73 /* InfoPlist.strings */; };
+		A00FCB8018C03F3100E54B73 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB7F18C03F3100E54B73 /* main.m */; };
+		A00FCB8418C03F3100E54B73 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB8218C03F3100E54B73 /* Credits.rtf */; };
+		A00FCB8718C03F3100E54B73 /* ZKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCB8618C03F3100E54B73 /* ZKAppDelegate.m */; };
+		A00FCB8A18C03F3100E54B73 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB8818C03F3100E54B73 /* MainMenu.xib */; };
+		A00FCB8C18C03F3100E54B73 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00FCB8B18C03F3100E54B73 /* Images.xcassets */; };
+		A00FCBA418C03F4200E54B73 /* GCDHttpd_OSX.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCB3018C03E2C00E54B73 /* GCDHttpd_OSX.dylib */; };
+		A00FCBA818C0409F00E54B73 /* ZKHTTPDService.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCBA718C0409F00E54B73 /* ZKHTTPDService.m */; };
+		A00FCBA918C0454400E54B73 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 06F9C73516D724F00007FDB9 /* GCDAsyncSocket.m */; };
+		A00FCBAA18C0454E00E54B73 /* ZKHTTPDService.m in Sources */ = {isa = PBXBuildFile; fileRef = A00FCBA718C0409F00E54B73 /* ZKHTTPDService.m */; };
+		A00FCBAC18C049DD00E54B73 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00FCBAB18C049DD00E54B73 /* WebKit.framework */; };
+		A00FCBAD18C04BB200E54B73 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 06F9C74E16D728A90007FDB9 /* index.html */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00FCB1B18C03E1000E54B73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06F9C6C316D723090007FDB9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00FCB0A18C03E0F00E54B73;
+			remoteInfo = GCDHttpd_iOS;
+		};
+		A00FCB4418C03E2C00E54B73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06F9C6C316D723090007FDB9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00FCB2F18C03E2C00E54B73;
+			remoteInfo = GCDHttpd_OSX;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A00FCB0918C03E0F00E54B73 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				A00FCB1118C03E1000E54B73 /* GCDHttpd_iOS.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0668290A16E2F42500C33092 /* NSMutableData+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+Utils.h"; sourceTree = "<group>"; };
@@ -76,6 +147,42 @@
 		06F9C74916D7264F0007FDB9 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		06F9C74B16D726890007FDB9 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		06F9C74E16D728A90007FDB9 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		A00FCAF218C03ABB00E54B73 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		A00FCB0B18C03E0F00E54B73 /* libGCDHttpd_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGCDHttpd_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00FCB0F18C03E1000E54B73 /* GCDHttpd_iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GCDHttpd_iOS-Prefix.pch"; sourceTree = "<group>"; };
+		A00FCB1018C03E1000E54B73 /* GCDHttpd_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDHttpd_iOS.h; sourceTree = "<group>"; };
+		A00FCB1218C03E1000E54B73 /* GCDHttpd_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDHttpd_iOS.m; sourceTree = "<group>"; };
+		A00FCB2018C03E1000E54B73 /* GCDHttpd_iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GCDHttpd_iOSTests-Info.plist"; sourceTree = "<group>"; };
+		A00FCB2218C03E1000E54B73 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A00FCB2418C03E1000E54B73 /* GCDHttpd_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDHttpd_iOSTests.m; sourceTree = "<group>"; };
+		A00FCB3018C03E2C00E54B73 /* GCDHttpd_OSX.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = GCDHttpd_OSX.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00FCB3118C03E2C00E54B73 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		A00FCB3418C03E2C00E54B73 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A00FCB3518C03E2C00E54B73 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A00FCB3618C03E2C00E54B73 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		A00FCB3918C03E2C00E54B73 /* GCDHttpd_OSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GCDHttpd_OSX-Prefix.pch"; sourceTree = "<group>"; };
+		A00FCB3A18C03E2C00E54B73 /* GCDHttpd_OSX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDHttpd_OSX.h; sourceTree = "<group>"; };
+		A00FCB3B18C03E2C00E54B73 /* GCDHttpd_OSX.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDHttpd_OSX.m; sourceTree = "<group>"; };
+		A00FCB4118C03E2C00E54B73 /* GCDHttpd_OSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GCDHttpd_OSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00FCB4918C03E2C00E54B73 /* GCDHttpd_OSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GCDHttpd_OSXTests-Info.plist"; sourceTree = "<group>"; };
+		A00FCB4B18C03E2C00E54B73 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A00FCB4D18C03E2C00E54B73 /* GCDHttpd_OSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDHttpd_OSXTests.m; sourceTree = "<group>"; };
+		A00FCB6A18C03E6300E54B73 /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
+		A00FCB6C18C03E7300E54B73 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		A00FCB6F18C03E8C00E54B73 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		A00FCB7718C03F3100E54B73 /* GCDHttpdOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCDHttpdOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00FCB7B18C03F3100E54B73 /* GCDHttpdOSX-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GCDHttpdOSX-Info.plist"; sourceTree = "<group>"; };
+		A00FCB7D18C03F3100E54B73 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A00FCB7F18C03F3100E54B73 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A00FCB8118C03F3100E54B73 /* GCDHttpdOSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GCDHttpdOSX-Prefix.pch"; sourceTree = "<group>"; };
+		A00FCB8318C03F3100E54B73 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		A00FCB8518C03F3100E54B73 /* ZKAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKAppDelegate.h; sourceTree = "<group>"; };
+		A00FCB8618C03F3100E54B73 /* ZKAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZKAppDelegate.m; sourceTree = "<group>"; };
+		A00FCB8918C03F3100E54B73 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		A00FCB8B18C03F3100E54B73 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A00FCBA618C0409F00E54B73 /* ZKHTTPDService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZKHTTPDService.h; path = ../ZKHTTPDService.h; sourceTree = "<group>"; };
+		A00FCBA718C0409F00E54B73 /* ZKHTTPDService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZKHTTPDService.m; path = ../ZKHTTPDService.m; sourceTree = "<group>"; };
+		A00FCBAB18C049DD00E54B73 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,11 +190,62 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A00FCB7218C03ED900E54B73 /* libGCDHttpd_iOS.a in Frameworks */,
 				06F9C74C16D726890007FDB9 /* CFNetwork.framework in Frameworks */,
 				06F9C74A16D7264F0007FDB9 /* Security.framework in Frameworks */,
 				06F9C6CF16D723090007FDB9 /* UIKit.framework in Frameworks */,
 				06F9C6D116D723090007FDB9 /* Foundation.framework in Frameworks */,
 				06F9C6D316D723090007FDB9 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB0818C03E0F00E54B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB6E18C03E8000E54B73 /* CFNetwork.framework in Frameworks */,
+				A00FCB6918C03E5200E54B73 /* Security.framework in Frameworks */,
+				A00FCB0C18C03E0F00E54B73 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB1518C03E1000E54B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB1818C03E1000E54B73 /* XCTest.framework in Frameworks */,
+				A00FCB1A18C03E1000E54B73 /* UIKit.framework in Frameworks */,
+				A00FCB1918C03E1000E54B73 /* Foundation.framework in Frameworks */,
+				A00FCB1D18C03E1000E54B73 /* libGCDHttpd_iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB2D18C03E2C00E54B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB7018C03E8C00E54B73 /* Security.framework in Frameworks */,
+				A00FCB3218C03E2C00E54B73 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB3E18C03E2C00E54B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB4318C03E2C00E54B73 /* Cocoa.framework in Frameworks */,
+				A00FCB4618C03E2C00E54B73 /* GCDHttpd_OSX.dylib in Frameworks */,
+				A00FCB4218C03E2C00E54B73 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB7418C03F3100E54B73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCBAC18C049DD00E54B73 /* WebKit.framework in Frameworks */,
+				A00FCBA418C03F4200E54B73 /* GCDHttpd_OSX.dylib in Frameworks */,
+				A00FCB7818C03F3100E54B73 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +255,13 @@
 		06F9C6C216D723090007FDB9 = {
 			isa = PBXGroup;
 			children = (
-				06F9C6D416D723090007FDB9 /* GCDHttpdIOS */,
+				A00FCBA518C0407200E54B73 /* HTTPDemoCommon */,
+				06F9C6D416D723090007FDB9 /* GCDHttpdIOS_Demo */,
+				A00FCB7918C03F3100E54B73 /* GCDHttpdOSX_Demo */,
+				A00FCB0D18C03E0F00E54B73 /* GCDHttpd_iOS */,
+				A00FCB1E18C03E1000E54B73 /* GCDHttpd_iOSTests */,
+				A00FCB3718C03E2C00E54B73 /* GCDHttpd_OSX */,
+				A00FCB4718C03E2C00E54B73 /* GCDHttpd_OSXTests */,
 				06F9C6CD16D723090007FDB9 /* Frameworks */,
 				06F9C6CC16D723090007FDB9 /* Products */,
 			);
@@ -107,6 +271,10 @@
 			isa = PBXGroup;
 			children = (
 				06F9C6CB16D723090007FDB9 /* GCDHttpdIOS.app */,
+				A00FCB0B18C03E0F00E54B73 /* libGCDHttpd_iOS.a */,
+				A00FCB3018C03E2C00E54B73 /* GCDHttpd_OSX.dylib */,
+				A00FCB4118C03E2C00E54B73 /* GCDHttpd_OSXTests.xctest */,
+				A00FCB7718C03F3100E54B73 /* GCDHttpdOSX.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,16 +282,23 @@
 		06F9C6CD16D723090007FDB9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A00FCBAB18C049DD00E54B73 /* WebKit.framework */,
+				A00FCB6F18C03E8C00E54B73 /* Security.framework */,
+				A00FCB6C18C03E7300E54B73 /* SystemConfiguration.framework */,
+				A00FCB6A18C03E6300E54B73 /* libcommonCrypto.dylib */,
 				06F9C74B16D726890007FDB9 /* CFNetwork.framework */,
 				06F9C74916D7264F0007FDB9 /* Security.framework */,
 				06F9C6CE16D723090007FDB9 /* UIKit.framework */,
 				06F9C6D016D723090007FDB9 /* Foundation.framework */,
 				06F9C6D216D723090007FDB9 /* CoreGraphics.framework */,
+				A00FCAF218C03ABB00E54B73 /* XCTest.framework */,
+				A00FCB3118C03E2C00E54B73 /* Cocoa.framework */,
+				A00FCB3318C03E2C00E54B73 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		06F9C6D416D723090007FDB9 /* GCDHttpdIOS */ = {
+		06F9C6D416D723090007FDB9 /* GCDHttpdIOS_Demo */ = {
 			isa = PBXGroup;
 			children = (
 				06F9C74D16D7272C0007FDB9 /* Web */,
@@ -137,6 +312,7 @@
 				06CD27FA16DB45F500C49E62 /* ZKWebViewController.xib */,
 				06F9C6D516D723090007FDB9 /* Supporting Files */,
 			);
+			name = GCDHttpdIOS_Demo;
 			path = GCDHttpdIOS;
 			sourceTree = "<group>";
 		};
@@ -198,7 +374,133 @@
 			name = Web;
 			sourceTree = "<group>";
 		};
+		A00FCB0D18C03E0F00E54B73 /* GCDHttpd_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB1018C03E1000E54B73 /* GCDHttpd_iOS.h */,
+				A00FCB1218C03E1000E54B73 /* GCDHttpd_iOS.m */,
+				A00FCB0E18C03E1000E54B73 /* Supporting Files */,
+			);
+			path = GCDHttpd_iOS;
+			sourceTree = "<group>";
+		};
+		A00FCB0E18C03E1000E54B73 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB0F18C03E1000E54B73 /* GCDHttpd_iOS-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A00FCB1E18C03E1000E54B73 /* GCDHttpd_iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB2418C03E1000E54B73 /* GCDHttpd_iOSTests.m */,
+				A00FCB1F18C03E1000E54B73 /* Supporting Files */,
+			);
+			path = GCDHttpd_iOSTests;
+			sourceTree = "<group>";
+		};
+		A00FCB1F18C03E1000E54B73 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB2018C03E1000E54B73 /* GCDHttpd_iOSTests-Info.plist */,
+				A00FCB2118C03E1000E54B73 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A00FCB3318C03E2C00E54B73 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB3418C03E2C00E54B73 /* Foundation.framework */,
+				A00FCB3518C03E2C00E54B73 /* CoreData.framework */,
+				A00FCB3618C03E2C00E54B73 /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		A00FCB3718C03E2C00E54B73 /* GCDHttpd_OSX */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB3A18C03E2C00E54B73 /* GCDHttpd_OSX.h */,
+				A00FCB3B18C03E2C00E54B73 /* GCDHttpd_OSX.m */,
+				A00FCB3818C03E2C00E54B73 /* Supporting Files */,
+			);
+			path = GCDHttpd_OSX;
+			sourceTree = "<group>";
+		};
+		A00FCB3818C03E2C00E54B73 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB3918C03E2C00E54B73 /* GCDHttpd_OSX-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A00FCB4718C03E2C00E54B73 /* GCDHttpd_OSXTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB4D18C03E2C00E54B73 /* GCDHttpd_OSXTests.m */,
+				A00FCB4818C03E2C00E54B73 /* Supporting Files */,
+			);
+			path = GCDHttpd_OSXTests;
+			sourceTree = "<group>";
+		};
+		A00FCB4818C03E2C00E54B73 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB4918C03E2C00E54B73 /* GCDHttpd_OSXTests-Info.plist */,
+				A00FCB4A18C03E2C00E54B73 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A00FCB7918C03F3100E54B73 /* GCDHttpdOSX_Demo */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB8518C03F3100E54B73 /* ZKAppDelegate.h */,
+				A00FCB8618C03F3100E54B73 /* ZKAppDelegate.m */,
+				A00FCB8818C03F3100E54B73 /* MainMenu.xib */,
+				A00FCB8B18C03F3100E54B73 /* Images.xcassets */,
+				A00FCB7A18C03F3100E54B73 /* Supporting Files */,
+			);
+			name = GCDHttpdOSX_Demo;
+			path = GCDHttpdOSX;
+			sourceTree = "<group>";
+		};
+		A00FCB7A18C03F3100E54B73 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCB7B18C03F3100E54B73 /* GCDHttpdOSX-Info.plist */,
+				A00FCB7C18C03F3100E54B73 /* InfoPlist.strings */,
+				A00FCB7F18C03F3100E54B73 /* main.m */,
+				A00FCB8118C03F3100E54B73 /* GCDHttpdOSX-Prefix.pch */,
+				A00FCB8218C03F3100E54B73 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A00FCBA518C0407200E54B73 /* HTTPDemoCommon */ = {
+			isa = PBXGroup;
+			children = (
+				A00FCBA618C0409F00E54B73 /* ZKHTTPDService.h */,
+				A00FCBA718C0409F00E54B73 /* ZKHTTPDService.m */,
+			);
+			name = HTTPDemoCommon;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A00FCB2E18C03E2C00E54B73 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		06F9C6CA16D723090007FDB9 /* GCDHttpdIOS */ = {
@@ -218,6 +520,92 @@
 			productReference = 06F9C6CB16D723090007FDB9 /* GCDHttpdIOS.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A00FCB0A18C03E0F00E54B73 /* GCDHttpd_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00FCB2618C03E1000E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_iOS" */;
+			buildPhases = (
+				A00FCB0718C03E0F00E54B73 /* Sources */,
+				A00FCB0818C03E0F00E54B73 /* Frameworks */,
+				A00FCB0918C03E0F00E54B73 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GCDHttpd_iOS;
+			productName = GCDHttpd_iOS;
+			productReference = A00FCB0B18C03E0F00E54B73 /* libGCDHttpd_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		A00FCB1718C03E1000E54B73 /* GCDHttpd_iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00FCB2918C03E1000E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_iOSTests" */;
+			buildPhases = (
+				A00FCB1418C03E1000E54B73 /* Sources */,
+				A00FCB1518C03E1000E54B73 /* Frameworks */,
+				A00FCB1618C03E1000E54B73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00FCB1C18C03E1000E54B73 /* PBXTargetDependency */,
+			);
+			name = GCDHttpd_iOSTests;
+			productName = GCDHttpd_iOSTests;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A00FCB2F18C03E2C00E54B73 /* GCDHttpd_OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00FCB4F18C03E2C00E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_OSX" */;
+			buildPhases = (
+				A00FCB2C18C03E2C00E54B73 /* Sources */,
+				A00FCB2D18C03E2C00E54B73 /* Frameworks */,
+				A00FCB2E18C03E2C00E54B73 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GCDHttpd_OSX;
+			productName = GCDHttpd_OSX;
+			productReference = A00FCB3018C03E2C00E54B73 /* GCDHttpd_OSX.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		A00FCB4018C03E2C00E54B73 /* GCDHttpd_OSXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00FCB5218C03E2C00E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_OSXTests" */;
+			buildPhases = (
+				A00FCB3D18C03E2C00E54B73 /* Sources */,
+				A00FCB3E18C03E2C00E54B73 /* Frameworks */,
+				A00FCB3F18C03E2C00E54B73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00FCB4518C03E2C00E54B73 /* PBXTargetDependency */,
+			);
+			name = GCDHttpd_OSXTests;
+			productName = GCDHttpd_OSXTests;
+			productReference = A00FCB4118C03E2C00E54B73 /* GCDHttpd_OSXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A00FCB7618C03F3100E54B73 /* GCDHttpdOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00FCB9E18C03F3200E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpdOSX" */;
+			buildPhases = (
+				A00FCB7318C03F3100E54B73 /* Sources */,
+				A00FCB7418C03F3100E54B73 /* Frameworks */,
+				A00FCB7518C03F3100E54B73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GCDHttpdOSX;
+			productName = GCDHttpdOSX;
+			productReference = A00FCB7718C03F3100E54B73 /* GCDHttpdOSX.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -227,6 +615,14 @@
 				CLASSPREFIX = ZK;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = zengke;
+				TargetAttributes = {
+					A00FCB1718C03E1000E54B73 = {
+						TestTargetID = 06F9C6CA16D723090007FDB9;
+					};
+					A00FCB4018C03E2C00E54B73 = {
+						TestTargetID = 06F9C6CA16D723090007FDB9;
+					};
+				};
 			};
 			buildConfigurationList = 06F9C6C616D723090007FDB9 /* Build configuration list for PBXProject "GCDHttpdIOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -234,6 +630,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 06F9C6C216D723090007FDB9;
 			productRefGroup = 06F9C6CC16D723090007FDB9 /* Products */;
@@ -241,6 +638,11 @@
 			projectRoot = "";
 			targets = (
 				06F9C6CA16D723090007FDB9 /* GCDHttpdIOS */,
+				A00FCB7618C03F3100E54B73 /* GCDHttpdOSX */,
+				A00FCB0A18C03E0F00E54B73 /* GCDHttpd_iOS */,
+				A00FCB1718C03E1000E54B73 /* GCDHttpd_iOSTests */,
+				A00FCB2F18C03E2C00E54B73 /* GCDHttpd_OSX */,
+				A00FCB4018C03E2C00E54B73 /* GCDHttpd_OSXTests */,
 			);
 		};
 /* End PBXProject section */
@@ -259,6 +661,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A00FCB1618C03E1000E54B73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB2318C03E1000E54B73 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB3F18C03E2C00E54B73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB4C18C03E2C00E54B73 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB7518C03F3100E54B73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCBAD18C04BB200E54B73 /* index.html in Resources */,
+				A00FCB7E18C03F3100E54B73 /* InfoPlist.strings in Resources */,
+				A00FCB8C18C03F3100E54B73 /* Images.xcassets in Resources */,
+				A00FCB8418C03F3100E54B73 /* Credits.rtf in Resources */,
+				A00FCB8A18C03F3100E54B73 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -268,22 +698,87 @@
 			files = (
 				06F9C6DB16D723090007FDB9 /* main.m in Sources */,
 				06F9C6DF16D723090007FDB9 /* ZKAppDelegate.m in Sources */,
+				A00FCBA818C0409F00E54B73 /* ZKHTTPDService.m in Sources */,
 				06F9C6F316D724A30007FDB9 /* ZKAddressListViewController.m in Sources */,
-				06F9C74216D724F00007FDB9 /* GCDAsyncSocket.m in Sources */,
-				06F9C74316D724F00007FDB9 /* GCDHttpd.m in Sources */,
-				06F9C74416D724F00007FDB9 /* GCDRequest.m in Sources */,
-				06F9C74516D724F00007FDB9 /* GCDResponse.m in Sources */,
-				06F9C74616D724F00007FDB9 /* GCDRouterRole.m in Sources */,
-				06F9C74716D724F00007FDB9 /* NSString+QueryString.m in Sources */,
-				06F9C74816D724F00007FDB9 /* NSURL+IntactPath.m in Sources */,
 				06CD27FB16DB45F500C49E62 /* ZKWebViewController.m in Sources */,
-				06CD27FF16DB4E0100C49E62 /* NSData+Utils.m in Sources */,
-				0668290C16E2F42500C33092 /* NSMutableData+Utils.m in Sources */,
-				0668290F16E30C0400C33092 /* GCDMultipart.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB0718C03E0F00E54B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB5C18C03E3A00E54B73 /* NSData+Utils.m in Sources */,
+				A00FCB1318C03E1000E54B73 /* GCDHttpd_iOS.m in Sources */,
+				A00FCB5818C03E3A00E54B73 /* GCDResponse.m in Sources */,
+				A00FCB5A18C03E3A00E54B73 /* NSString+QueryString.m in Sources */,
+				A00FCB5B18C03E3A00E54B73 /* NSURL+IntactPath.m in Sources */,
+				A00FCB5718C03E3A00E54B73 /* GCDRequest.m in Sources */,
+				A00FCB5D18C03E3A00E54B73 /* NSMutableData+Utils.m in Sources */,
+				A00FCB5E18C03E3A00E54B73 /* GCDMultipart.m in Sources */,
+				A00FCB5618C03E3A00E54B73 /* GCDHttpd.m in Sources */,
+				A00FCB5918C03E3A00E54B73 /* GCDRouterRole.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB1418C03E1000E54B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB2518C03E1000E54B73 /* GCDHttpd_iOSTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB2C18C03E2C00E54B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB6618C03E3B00E54B73 /* NSData+Utils.m in Sources */,
+				A00FCB3C18C03E2C00E54B73 /* GCDHttpd_OSX.m in Sources */,
+				A00FCB6218C03E3B00E54B73 /* GCDResponse.m in Sources */,
+				A00FCB6418C03E3B00E54B73 /* NSString+QueryString.m in Sources */,
+				A00FCB6518C03E3B00E54B73 /* NSURL+IntactPath.m in Sources */,
+				A00FCB6118C03E3B00E54B73 /* GCDRequest.m in Sources */,
+				A00FCB6718C03E3B00E54B73 /* NSMutableData+Utils.m in Sources */,
+				A00FCB6818C03E3B00E54B73 /* GCDMultipart.m in Sources */,
+				A00FCB6018C03E3B00E54B73 /* GCDHttpd.m in Sources */,
+				A00FCBA918C0454400E54B73 /* GCDAsyncSocket.m in Sources */,
+				A00FCB6318C03E3B00E54B73 /* GCDRouterRole.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB3D18C03E2C00E54B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB4E18C03E2C00E54B73 /* GCDHttpd_OSXTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00FCB7318C03F3100E54B73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00FCB8018C03F3100E54B73 /* main.m in Sources */,
+				A00FCB8718C03F3100E54B73 /* ZKAppDelegate.m in Sources */,
+				A00FCBAA18C0454E00E54B73 /* ZKHTTPDService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00FCB1C18C03E1000E54B73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00FCB0A18C03E0F00E54B73 /* GCDHttpd_iOS */;
+			targetProxy = A00FCB1B18C03E1000E54B73 /* PBXContainerItemProxy */;
+		};
+		A00FCB4518C03E2C00E54B73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00FCB2F18C03E2C00E54B73 /* GCDHttpd_OSX */;
+			targetProxy = A00FCB4418C03E2C00E54B73 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		06F9C6D716D723090007FDB9 /* InfoPlist.strings */ = {
@@ -292,6 +787,46 @@
 				06F9C6D816D723090007FDB9 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A00FCB2118C03E1000E54B73 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A00FCB2218C03E1000E54B73 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A00FCB4A18C03E2C00E54B73 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A00FCB4B18C03E2C00E54B73 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A00FCB7C18C03F3100E54B73 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A00FCB7D18C03F3100E54B73 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A00FCB8218C03F3100E54B73 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A00FCB8318C03F3100E54B73 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		A00FCB8818C03F3100E54B73 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A00FCB8918C03F3100E54B73 /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -359,6 +894,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GCDHttpdIOS/GCDHttpdIOS-Prefix.pch";
 				INFOPLIST_FILE = "GCDHttpdIOS/GCDHttpdIOS-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -370,7 +906,304 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GCDHttpdIOS/GCDHttpdIOS-Prefix.pch";
 				INFOPLIST_FILE = "GCDHttpdIOS/GCDHttpdIOS-Info.plist";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		A00FCB2718C03E1000E54B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DSTROOT = /tmp/GCDHttpd_iOS.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_iOS/GCDHttpd_iOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A00FCB2818C03E1000E54B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DSTROOT = /tmp/GCDHttpd_iOS.dst;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_iOS/GCDHttpd_iOS-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/system",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		A00FCB2A18C03E1000E54B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GCDHttpdIOS.app/GCDHttpdIOS";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_iOS/GCDHttpd_iOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpd_iOSTests/GCDHttpd_iOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		A00FCB2B18C03E1000E54B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GCDHttpdIOS.app/GCDHttpdIOS";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_iOS/GCDHttpd_iOS-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpd_iOSTests/GCDHttpd_iOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		A00FCB5018C03E2C00E54B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_OSX/GCDHttpd_OSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A00FCB5118C03E2C00E54B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_OSX/GCDHttpd_OSX-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A00FCB5318C03E2C00E54B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GCDHttpdIOS.app/GCDHttpdIOS";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_OSX/GCDHttpd_OSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpd_OSXTests/GCDHttpd_OSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		A00FCB5418C03E2C00E54B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GCDHttpdIOS.app/GCDHttpdIOS";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpd_OSX/GCDHttpd_OSX-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpd_OSXTests/GCDHttpd_OSXTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		A00FCB9F18C03F3200E54B73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpdOSX/GCDHttpdOSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpdOSX/GCDHttpdOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A00FCBA018C03F3200E54B73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GCDHttpdOSX/GCDHttpdOSX-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "GCDHttpdOSX/GCDHttpdOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -395,6 +1228,46 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		A00FCB2618C03E1000E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00FCB2718C03E1000E54B73 /* Debug */,
+				A00FCB2818C03E1000E54B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A00FCB2918C03E1000E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00FCB2A18C03E1000E54B73 /* Debug */,
+				A00FCB2B18C03E1000E54B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A00FCB4F18C03E2C00E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00FCB5018C03E2C00E54B73 /* Debug */,
+				A00FCB5118C03E2C00E54B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A00FCB5218C03E2C00E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpd_OSXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00FCB5318C03E2C00E54B73 /* Debug */,
+				A00FCB5418C03E2C00E54B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		A00FCB9E18C03F3200E54B73 /* Build configuration list for PBXNativeTarget "GCDHttpdOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00FCB9F18C03F3200E54B73 /* Debug */,
+				A00FCBA018C03F3200E54B73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
