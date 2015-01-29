@@ -282,7 +282,13 @@ static const NSInteger kHttpdStateInError = -1;
                     return;
                 }
             }
-            if (roleEntry.target) {
+            
+            if (roleEntry.actionBlock) {
+                id response = roleEntry.actionBlock(request);
+                [self socket:sock respond:response];
+                return;
+            }
+            else if (roleEntry.target) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 id response = [roleEntry.target performSelector:roleEntry.action withObject:request];
@@ -388,6 +394,16 @@ static const NSInteger kHttpdStateInError = -1;
     GCDRouterRole * roleEntry = [[GCDRouterRole alloc] init];
     roleEntry.target = target;
     roleEntry.action = action;
+    roleEntry.method = method;
+    roleEntry.pathPattern = role;
+    [_roles addObject:roleEntry];
+    return roleEntry;
+}
+
+- (GCDRouterRole *)addRouteforMethod:(NSString *)method role:(NSString *)role withAction:(id (^)(GCDRequest *))actionBlock
+{
+    GCDRouterRole * roleEntry = [[GCDRouterRole alloc] init];
+    roleEntry.actionBlock = actionBlock;
     roleEntry.method = method;
     roleEntry.pathPattern = role;
     [_roles addObject:roleEntry];
