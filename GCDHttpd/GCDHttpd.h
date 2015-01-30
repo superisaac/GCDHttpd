@@ -12,6 +12,14 @@
 #import "GCDResponse.h"
 #import "GCDRouterRole.h"
 
+typedef NS_ENUM(NSInteger, GCDHttpdServerState)
+{
+    kHttpdStateInError = -1,
+    kHttpdStateInitialized = 0,
+    kHttpdStateStarted,
+    kHttpdStateStopped
+};
+
 @protocol GCDHttpdDelegate <NSObject>
 @optional
 - (id) willStartRequest:(GCDRequest *)request;
@@ -27,7 +35,7 @@
 @property (nonatomic) int32_t maxAgeOfCacheControl;
 
 @property (nonatomic, weak) id<GCDHttpdDelegate> delegate;
-@property (nonatomic) NSInteger httpdState;
+@property (nonatomic) GCDHttpdServerState httpdState;
 @property (nonatomic, strong) NSNetService * netService;
 
 + (NSArray *)interfaceList;

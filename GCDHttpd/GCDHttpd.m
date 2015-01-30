@@ -33,11 +33,6 @@ static const long kTagReadMultipartHeader = 1106;
 
 static const long kTagReadMultipartBody = 1110;
 
-static const NSInteger kHttpdStateInitialized = 0;
-static const NSInteger kHttpdStateStarted = 1;
-static const NSInteger kHttpdStateStopped = 2;
-static const NSInteger kHttpdStateInError = -1;
-
 @implementation GCDHttpd {
     GCDAsyncSocket * _listenSocket;
     NSMutableArray * _roles;
