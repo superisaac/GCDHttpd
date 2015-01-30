@@ -42,9 +42,9 @@ static const NSInteger kHttpdStateInError = -1;
     GCDAsyncSocket * _listenSocket;
     NSMutableArray * _roles;
     dispatch_queue_t _dispatchQueue;
-    NSNetService    *_netService;
 }
 
+@synthesize netService=_netService;
 @synthesize delegate, maxAgeOfCacheControl, maxBodyLength;
 @synthesize port, interface, httpdState;
 
@@ -449,8 +449,11 @@ static const NSInteger kHttpdStateInError = -1;
 #endif
     NSString *bundleName = NSLocalizedString([[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"],nil);
     
-    _netService = [[NSNetService alloc] initWithDomain:@"" type:@"_http._tcp." name:[deviceName stringByAppendingFormat:@".%@",bundleName] port:self.port];
-    _netService.delegate = self;
+    if (_netService == nil)
+    {
+        _netService = [[NSNetService alloc] initWithDomain:@"" type:@"_http._tcp." name:[deviceName stringByAppendingFormat:@".%@",bundleName] port:self.port];
+        _netService.delegate = self;
+    }
     NSNetService *service = _netService;
     
     dispatch_block_t bonjourBlock = ^{

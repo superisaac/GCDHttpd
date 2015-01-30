@@ -28,6 +28,7 @@
 
 @property (nonatomic, weak) id<GCDHttpdDelegate> delegate;
 @property (nonatomic) NSInteger httpdState;
+@property (nonatomic, strong) NSNetService * netService;
 
 + (NSArray *)interfaceList;
 - (id) initWithDispatchQueue:(dispatch_queue_t)queue;
