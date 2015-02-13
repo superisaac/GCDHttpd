@@ -218,7 +218,7 @@ static const long kTagReadMultipartBody = 1110;
             
             if ([request.method isEqualToString:@"GET"]) {
                 [self socket:sock endParsingRequest:request];
-            } else if([request.method isEqualToString:@"POST"]) {
+            } else if([request.method isEqualToString:@"POST"] || [request.method isEqualToString:@"PUT"]) {
                 if ([request isMultipart]){
                     NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
                     request.multipart = [[GCDMultipart alloc] initWithBundary:boundary];
@@ -229,6 +229,8 @@ static const long kTagReadMultipartBody = 1110;
                 }
                 if (contentLength > 0) {
                     [sock readDataToLength:contentLength withTimeout:-1 tag:kTagReadPostContentLength];
+                } else {
+                    [self socket:sock endParsingRequest:request];
                 }
             }
         }
