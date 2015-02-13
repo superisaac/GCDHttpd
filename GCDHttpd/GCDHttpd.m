@@ -216,9 +216,15 @@ static const long kTagReadMultipartBody = 1110;
                 return; 
             }
             
-            if ([request.method isEqualToString:@"GET"]) {
+            if (
+                [request.method isEqualToString:@"GET"] ||
+                [request.method isEqualToString:@"DELETE"]
+                ) {
                 [self socket:sock endParsingRequest:request];
-            } else if([request.method isEqualToString:@"POST"] || [request.method isEqualToString:@"PUT"]) {
+            } else if(
+                      [request.method isEqualToString:@"POST"] ||
+                      [request.method isEqualToString:@"PUT"]
+                      ) {
                 if ([request isMultipart]){
                     NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
                     request.multipart = [[GCDMultipart alloc] initWithBundary:boundary];
