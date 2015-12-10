@@ -16,6 +16,10 @@
 #import "NSURL+IntactPath.h"
 #import "GCDMultipart.h"
 
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
+
 static const long kTagWriteAndClose = 1000;
 
 static const long kTagReadStatusLine = 1101;
@@ -29,17 +33,13 @@ static const long kTagReadMultipartHeader = 1106;
 
 static const long kTagReadMultipartBody = 1110;
 
-static const NSInteger kHttpdStateInitialized = 0;
-static const NSInteger kHttpdStateStarted = 1;
-static const NSInteger kHttpdStateStopped = 2;
-static const NSInteger kHttpdStateInError = -1;
-
 @implementation GCDHttpd {
     GCDAsyncSocket * _listenSocket;
     NSMutableArray * _roles;
     dispatch_queue_t _dispatchQueue;
 }
 
+@synthesize netService=_netService;
 @synthesize delegate, maxAgeOfCacheControl, maxBodyLength;
 @synthesize port, interface, httpdState;
 
@@ -97,6 +97,7 @@ static const NSInteger kHttpdStateInError = -1;
         self.httpdState = kHttpdStateInError;
     } else {
         self.httpdState = kHttpdStateStarted;
+        [self publishBonjour];
     }
 }
 
@@ -215,9 +216,15 @@ static const NSInteger kHttpdStateInError = -1;
                 return; 
             }
             
-            if ([request.method isEqualToString:@"GET"]) {
+            if (
+                [request.method isEqualToString:@"GET"] ||
+                [request.method isEqualToString:@"DELETE"]
+                ) {
                 [self socket:sock endParsingRequest:request];
-            } else if([request.method isEqualToString:@"POST"]) {
+            } else if(
+                      [request.method isEqualToString:@"POST"] ||
+                      [request.method isEqualToString:@"PUT"]
+                      ) {
                 if ([request isMultipart]){
                     NSString * boundary = [request multipartBoundaryWithPrefix:@"--"];
                     request.multipart = [[GCDMultipart alloc] initWithBundary:boundary];
@@ -228,6 +235,8 @@ static const NSInteger kHttpdStateInError = -1;
                 }
                 if (contentLength > 0) {
                     [sock readDataToLength:contentLength withTimeout:-1 tag:kTagReadPostContentLength];
+                } else {
+                    [self socket:sock endParsingRequest:request];
                 }
             }
         }
@@ -276,7 +285,13 @@ static const NSInteger kHttpdStateInError = -1;
                     return;
                 }
             }
-            if (roleEntry.target) {
+            
+            if (roleEntry.actionBlock) {
+                id response = roleEntry.actionBlock(request);
+                [self socket:sock respond:response];
+                return;
+            }
+            else if (roleEntry.target) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 id response = [roleEntry.target performSelector:roleEntry.action withObject:request];
@@ -388,6 +403,16 @@ static const NSInteger kHttpdStateInError = -1;
     return roleEntry;
 }
 
+- (GCDRouterRole *)addRouteforMethod:(NSString *)method role:(NSString *)role withAction:(id (^)(GCDRequest *))actionBlock
+{
+    GCDRouterRole * roleEntry = [[GCDRouterRole alloc] init];
+    roleEntry.actionBlock = actionBlock;
+    roleEntry.method = method;
+    roleEntry.pathPattern = role;
+    [_roles addObject:roleEntry];
+    return roleEntry;
+}
+
 + (NSString * )contentTypeForExtension:(NSString * )extension {
     static NSDictionary * typeMap;
     static dispatch_once_t onceToken;
@@ -415,6 +440,117 @@ static const NSInteger kHttpdStateInError = -1;
         return @"application/octet-stream";
     }
     return type;
+}
+
+#pragma mark - Bonjour Publishing
+- (void)publishBonjour
+{
+#if TARGET_OS_IPHONE
+    NSString *deviceName = [[UIDevice currentDevice] name];
+#else
+    NSString *deviceName = [[NSHost currentHost] localizedName];
+#endif
+    NSString *bundleName = NSLocalizedString([[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"],nil);
+    
+    if (_netService == nil)
+    {
+        _netService = [[NSNetService alloc] initWithDomain:@"" type:@"_http._tcp." name:[deviceName stringByAppendingFormat:@".%@",bundleName] port:self.port];
+        _netService.delegate = self;
+    }
+    NSNetService *service = _netService;
+    
+    dispatch_block_t bonjourBlock = ^{
+        [service removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        [service scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        [service publish];
+    };
+    [[self class] startBonjourThreadIfNeeded];
+    [[self class] performBonjourBlock:bonjourBlock];
+}
+
+- (void)unpublishBonjour
+{
+	if (_netService)
+	{
+		NSNetService *theNetService = _netService;
+		dispatch_block_t bonjourBlock = ^{
+			[theNetService stop];
+		};
+		[[self class] performBonjourBlock:bonjourBlock];
+		_netService = nil;
+	}
+}
+
+/**
+ * Called when our bonjour service has been successfully published.
+ * This method does nothing but output a log message telling us about the published service.
+ **/
+- (void)netServiceDidPublish:(NSNetService *)ns
+{
+	// Override me to do something here...
+	//
+	// Note: This method is invoked on our bonjour thread.
+	NSLog(@"Bonjour Service Published: domain(%@) type(%@) name(%@)", [ns domain], [ns type], [ns name]);
+}
+
+/**
+ * Called if our bonjour service failed to publish itself.
+ * This method does nothing but output a log message telling us about the published service.
+ **/
+- (void)netService:(NSNetService *)ns didNotPublish:(NSDictionary *)errorDict
+{
+	// Override me to do something here...
+	//
+	// Note: This method in invoked on our bonjour thread.
+	
+	NSLog(@"Failed to Publish Service: domain(%@) type(%@) name(%@) - %@",
+                [ns domain], [ns type], [ns name], errorDict);
+}
+
+#pragma mark - Class methods
+static NSThread *bonjourThread;
+
++ (void)startBonjourThreadIfNeeded
+{
+	static dispatch_once_t predicate;
+	dispatch_once(&predicate, ^{
+		bonjourThread = [[NSThread alloc] initWithTarget:self
+		                                        selector:@selector(bonjourThread)
+		                                          object:nil];
+		[bonjourThread start];
+	});
+}
+
++ (void)bonjourThread
+{
+	@autoreleasepool {
+		// We can't run the run loop unless it has an associated input source or a timer.
+		// So we'll just create a timer that will never fire - unless the server runs for 10,000 years.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+		[NSTimer scheduledTimerWithTimeInterval:[[NSDate distantFuture] timeIntervalSinceNow]
+		                                 target:self
+		                               selector:@selector(donothingatall:)
+		                               userInfo:nil
+		                                repeats:YES];
+#pragma clang diagnostic pop
+        
+		[[NSRunLoop currentRunLoop] run];
+	}
+}
+
++ (void)executeBonjourBlock:(dispatch_block_t)block
+{
+	NSAssert([NSThread currentThread] == bonjourThread, @"Executed on incorrect thread");
+	block();
+}
+
++ (void)performBonjourBlock:(dispatch_block_t)block
+{
+	[self performSelector:@selector(executeBonjourBlock:)
+	             onThread:bonjourThread
+	           withObject:block
+	        waitUntilDone:YES];
 }
 
 #pragma mark - static file hosting

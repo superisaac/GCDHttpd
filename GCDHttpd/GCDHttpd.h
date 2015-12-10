@@ -12,13 +12,21 @@
 #import "GCDResponse.h"
 #import "GCDRouterRole.h"
 
+typedef NS_ENUM(NSInteger, GCDHttpdServerState)
+{
+    kHttpdStateInError = -1,
+    kHttpdStateInitialized = 0,
+    kHttpdStateStarted,
+    kHttpdStateStopped
+};
+
 @protocol GCDHttpdDelegate <NSObject>
 @optional
 - (id) willStartRequest:(GCDRequest *)request;
 - (void) didFinishedRequest:(GCDRequest *)request withResponse:(GCDResponse *)response;
 @end
 
-@interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate>
+@interface GCDHttpd : NSObject <GCDAsyncSocketDelegate, GCDResponseDelegate, NSNetServiceDelegate>
 
 @property (nonatomic) int16_t port;
 @property (nonatomic, retain) NSString * interface;
@@ -27,7 +35,8 @@
 @property (nonatomic) int32_t maxAgeOfCacheControl;
 
 @property (nonatomic, weak) id<GCDHttpdDelegate> delegate;
-@property (nonatomic) NSInteger httpdState;
+@property (nonatomic) GCDHttpdServerState httpdState;
+@property (nonatomic, strong) NSNetService * netService;
 
 + (NSArray *)interfaceList;
 - (id) initWithDispatchQueue:(dispatch_queue_t)queue;
@@ -36,6 +45,7 @@
 
 - (dispatch_queue_t)dispatchQueue;
 - (GCDRouterRole *)addTarget:(id)target action:(SEL)action forMethod:(NSString *)method role:(NSString *)role;
+- (GCDRouterRole *)addRouteforMethod:(NSString *)method role:(NSString *)role withAction:(id (^)(GCDRequest *))actionBlock;
 - (void)serveDirectory:(NSString *)directory  forURLPrefix:(NSString *)prefix;
 - (void)serveResource:(NSString *)resource forRole:(NSString *)resourceRole;
 

@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZKHTTPDService.h"
 
 @interface ZKAddressListViewController : UITableViewController
-
+@property (assign, nonatomic) ZKHTTPDService *service;
+- (id)initWithStyle:(UITableViewStyle)style service:(ZKHTTPDService *)service;
 @end
