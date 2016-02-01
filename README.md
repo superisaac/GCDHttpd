@@ -6,6 +6,10 @@ GCDHttpd is a lightweight objective-c HTTP server framework build atop
 thus it is easy to be embeded in iOS/OSX projects.  The underline
 grand central dispatch make the multi core programming easy.
 
+## License
+
+GCDHttpd is released under [MIT License](http://opensource.org/licenses/mit-license.php)
+
 ## Install
 
 * Drag the Folder GCDHttpd into your Xcode projects
